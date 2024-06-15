@@ -10,7 +10,7 @@ export default function Property() {
   const [pagination, setPagination] = useState<number>(1);
 
   return (
-    <div className={`text-black flex flex-col gap-6 w-fit`}>
+    <div className={`text-black flex flex-col gap-6`}>
       {/* Table */}
       <div
         className={`bg-white h-fit rounded-lg shadow-md flex flex-col gap-4 w-full overflow-auto `}
@@ -45,19 +45,19 @@ export default function Property() {
             <Add /> Property
           </Link>
         </div>
-        <div className={`hidden md:block`}>
+        <div className={` w-full overflow-scroll`}>
           <table className={`table-auto text-left w-full rounded-t-lg text-sm`}>
             <thead
               className={` rounded-t-lg border-b border-black border-opacity-20`}
             >
               <tr className={`border-t body2`}>
-                <td className={`w-[500px] pl-8 pr-4 py-1  rounded-tl-xl`}>
+                <td
+                  className={`w-[200px] px-3 pr-4 py-1  rounded-tl-xl  col-span-2`}
+                >
                   Name
                 </td>
                 <td className={`w-[100px] px-3 py-2 `}>Price</td>
                 <td className={`w-[100px] px-3 py-2 `}>Availability</td>
-                <td className={`w-[100px] px-3 py-2 `}>LandSize</td>
-                <td className={`w-[100px] px-3 py-2 `}>BuildSize</td>
                 <td className={`w-[100px] px-3 py-2 `}>Status</td>
                 <td className={`w-[100px] pl-3 pr-8 py-2  rounded-tr-xl`}>
                   Published
@@ -67,13 +67,16 @@ export default function Property() {
             <tbody>
               {dummy.map((rows, index) => (
                 <tr key={index} className={`border-b border-[#E5E5E5]`}>
-                  <td className={`pl-8 pr-3 py-1 `}>{rows.name}</td>
+                  <td className={`pl-8 pr-3`}>
+                    <div className={`w-10 h-10  bg-gray-300 shrink-0`} />
+                  </td>
+                  <td className={`px-3 pr-3 py-1 line-clamp-3 `}>
+                    {rows.name}
+                  </td>
                   <td className={`px-3 py-2 `}>
                     Rp{currencyFormat(rows.price)}
                   </td>
                   <td className={`px-3 py-2 `}>{rows.availability}</td>
-                  <td className={`px-3 py-2 `}>{rows.landSize}</td>
-                  <td className={`px-3 py-2 `}>{rows.buildSize}</td>
                   <td className={`px-3 py-2 `}>{rows.status}</td>
                   <td className={`pl-3 pr-8 py-2 `}>
                     <label className="inline-flex items-center cursor-pointer">
