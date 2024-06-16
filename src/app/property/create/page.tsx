@@ -9,6 +9,9 @@ interface PostPropertyProps {
   title: string;
   price: string;
   description: IDescription[];
+  status: boolean;
+  published: boolean;
+  availability:boolean;
 }
 
 interface IDescription {
@@ -21,6 +24,9 @@ export default function CreateProperty() {
     title: "",
     price: "0",
     description: [{ title: "", description: "" }],
+    status: false,
+    published: false,
+    availability:false
   });
 
   const addDescription = () => {
@@ -44,14 +50,14 @@ export default function CreateProperty() {
         Create Property
       </div>
       <div className={` text-black w-full font-lato flex flex-col gap-4`}>
-        <div className={`bg-white divide-y px-6 `}>
-          <div className={`py-5 font-montserrat`}>
+        <div className={`bg-white divide-y px-6 py-5 `}>
+          <div className={` pb-3 font-montserrat`}>
             <div className={` font-medium body1`}>Product Details</div>
             <div className={`body3 text-gray-400 mt-1`}>
               Property name, price, description
             </div>
           </div>
-          <div className={`flex flex-col py-5 gap-6`}>
+          <div className={`flex flex-col py-5 gap-5`}>
             <Input
               value={payload.title}
               id={"title"}
@@ -88,20 +94,61 @@ export default function CreateProperty() {
                 <option>Hello</option>
               </select>
             </div>
+
+            <div className={`flex items-center gap-3`}>
+              <label className={`font-montserrat`}>Availability</label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  onChange={() => {
+                    setPayload({ ...payload, availability: !payload.availability });
+                  }}
+                  type="checkbox"
+                  checked={payload.availability}
+                  className="sr-only peer"
+                />
+                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+              </label>
+              <label className={`font-montserrat`}>Status</label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  onChange={() => {
+                    setPayload({ ...payload, status: !payload.status });
+                  }}
+                  type="checkbox"
+                  checked={payload.status}
+                  className="sr-only peer"
+                />
+                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+              </label>
+              <label className={`font-montserrat`}>Published</label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  onChange={() => {
+                    setPayload({ ...payload, published: !payload.published });
+                  }}
+                  type="checkbox"
+                  checked={payload.published}
+                  className="sr-only peer"
+                />
+                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+              </label>
+            </div>
           </div>
         </div>
-        <div className={`bg-white divide-y px-6 `}>
-          <div className={`py-5 font-montserrat`}>
+        <div className={`bg-white divide-y px-6 py-5`}>
+          <div className={`pb-4 font-montserrat`}>
             <div className={` font-medium body1`}>Property Description</div>
             <div className={`body3 text-gray-400 mt-1`}>
               Description of the Property. You may input more than 1 description
               section
             </div>
           </div>
-          <div className={`flex flex-col py-5 gap-6`}>
+          <div className={`flex flex-col pt-4 gap-6`}>
             {payload.description.map((rows, index) => (
               <div key={index}>
-                <div className={`h3 mb-2`}>Description {index + 1}</div>
+                <div className={`font-montserrat body1 mb-4 `}>
+                  Description {index + 1}
+                </div>
                 <Input
                   name={`payload.description.${index}`}
                   label={`Title`}
@@ -149,7 +196,7 @@ export default function CreateProperty() {
           </div>
         </div>
         <Button
-            className={`mb-20`}
+          className={`mb-20`}
           onClick={() => {
             console.log(payload);
           }}

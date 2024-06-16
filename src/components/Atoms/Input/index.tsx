@@ -16,12 +16,12 @@ export default function Input({
   ...props
 }: InputProps) {
   return (
-    <div className={`${className} text-sm`}>
+    <div className={`${className} body2`}>
       <label className={`font-montserrat body1 mb-3 body2`} htmlFor={props.id}>
         {label}
       </label>
       <div
-        className={`flex items-center divide-x divide-gray-300 mt-2 ${
+        className={`flex items-center divide-x divide-gray-300 mt-3 ${
           withPrefix && "border border-gray-300 rounded-lg "
         } `}
       >
