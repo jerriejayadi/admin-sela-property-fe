@@ -46,12 +46,12 @@ export default function Sidebar({ children }: SideBarProps) {
   const [title, setTitle] = useState<string>(toTitleCase(path.split(`/`)[1]));
   return (
     <div className={``}>
-      <div className={`flex `}>
+      <div className={`flex`}>
         {/* Sidebar */}
         <div
-          className={`sticky left-0 md:mx-0 bottom-0 w md:left-0 md:top-0 md:w-[300px] bg-gray-900  text-white md:h-screen hidden md:flex flex-col items-start justify-between gap-5 z-50`}
+          className={` w-full fixed bottom-0 mx-0 md:sticky  md:mx-0  md:left-0 md:top-0 md:w-[300px] bg-gray-900  text-white md:h-screen md:flex flex-col items-start justify-between gap-5 z-50`}
         >
-          <div className={` mx-auto max-w-[350px] md:mx-0 overflow-auto`}>
+          <div className={`w-full mx-auto max-w-[350px] md:mx-0 overflow-auto`}>
             {/* icon */}
             <Link
               href={`/`}
@@ -78,7 +78,7 @@ export default function Sidebar({ children }: SideBarProps) {
                 <Link
                   className={`flex items-center gap-2 justify-center md:justify-start px-3 py-3 md:rounded-lg w-full ${
                     path === rows.path
-                      ? "md:bg-white md:bg-opacity-10 text-white"
+                      ? "bg-white bg-opacity-10 text-white rounded-xl"
                       : "text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300"
                   } `}
                   key={index}
@@ -161,15 +161,18 @@ export default function Sidebar({ children }: SideBarProps) {
               </div>
             </div>
           </div>
-          <main className={`p-4 md:p-8 mx-auto overflow-auto w-full`}>{children}</main>
+
+          <main className={`p-4 md:p-8 mx-auto overflow-auto w-full`}>
+            {children}
+          </main>
         </div>
       </div>
-      <div>
+      {/* <div>
         <div
           className={`fixed bottom-0 left-0 md:mx-0 w-full md:left-0 md:top-0 md:w-[300px] bg-gray-900  text-white md:h-screen  md:hidden  gap-5 z-50`}
         >
-          <div className={`w-full mx-auto max-w-[350px] md:mx-0 overflow-auto`}>
-            {/* icon */}
+          <div className={` max-w-[350px] md:mx-0 overflow-auto`}>
+      
             <Link
               href={`/`}
               className={` items-center gap-2  z-50 hidden md:flex px-6 py-5`}
@@ -187,7 +190,7 @@ export default function Sidebar({ children }: SideBarProps) {
               </div>
             </Link>
 
-            {/* Menu */}
+         
             <div
               className={`flex items-center md:items-start justify-around  md:flex-col py-2 gap-2 md:mt-5 overflow-auto overflow px-4`}
             >
@@ -212,7 +215,7 @@ export default function Sidebar({ children }: SideBarProps) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

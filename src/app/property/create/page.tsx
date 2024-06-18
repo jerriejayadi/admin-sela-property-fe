@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/components/Atoms/Button";
 import Input from "@/components/Atoms/Input";
+import TipTap from "@/components/Atoms/TipTap";
 import { currencyFormat } from "@/utils";
 import { Add, Trash } from "iconsax-react";
 import { useState } from "react";
@@ -11,7 +12,7 @@ interface PostPropertyProps {
   description: IDescription[];
   status: boolean;
   published: boolean;
-  availability:boolean;
+  availability: boolean;
 }
 
 interface IDescription {
@@ -26,7 +27,7 @@ export default function CreateProperty() {
     description: [{ title: "", description: "" }],
     status: false,
     published: false,
-    availability:false
+    availability: false,
   });
 
   const addDescription = () => {
@@ -95,43 +96,52 @@ export default function CreateProperty() {
               </select>
             </div>
 
-            <div className={`flex items-center gap-3`}>
-              <label className={`font-montserrat`}>Availability</label>
-              <label className="inline-flex items-center cursor-pointer">
-                <input
-                  onChange={() => {
-                    setPayload({ ...payload, availability: !payload.availability });
-                  }}
-                  type="checkbox"
-                  checked={payload.availability}
-                  className="sr-only peer"
-                />
-                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-              </label>
-              <label className={`font-montserrat`}>Status</label>
-              <label className="inline-flex items-center cursor-pointer">
-                <input
-                  onChange={() => {
-                    setPayload({ ...payload, status: !payload.status });
-                  }}
-                  type="checkbox"
-                  checked={payload.status}
-                  className="sr-only peer"
-                />
-                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-              </label>
-              <label className={`font-montserrat`}>Published</label>
-              <label className="inline-flex items-center cursor-pointer">
-                <input
-                  onChange={() => {
-                    setPayload({ ...payload, published: !payload.published });
-                  }}
-                  type="checkbox"
-                  checked={payload.published}
-                  className="sr-only peer"
-                />
-                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-              </label>
+            <div className={`flex flex-wrap md:flex-row md:items-center gap-5`}>
+              <div className={`flex items-center gap-2`}>
+                <label className={`font-montserrat`}>Availability</label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    onChange={() => {
+                      setPayload({
+                        ...payload,
+                        availability: !payload.availability,
+                      });
+                    }}
+                    type="checkbox"
+                    checked={payload.availability}
+                    className="sr-only peer"
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+              </div>
+              <div className={`flex items-center gap-2`}>
+                <label className={`font-montserrat`}>Status</label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    onChange={() => {
+                      setPayload({ ...payload, status: !payload.status });
+                    }}
+                    type="checkbox"
+                    checked={payload.status}
+                    className="sr-only peer"
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+              </div>
+              <div className={`flex items-center gap-2`}>
+                <label className={`font-montserrat`}>Published</label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    onChange={() => {
+                      setPayload({ ...payload, published: !payload.published });
+                    }}
+                    type="checkbox"
+                    checked={payload.published}
+                    className="sr-only peer"
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -171,6 +181,7 @@ export default function CreateProperty() {
                   placeholder={`Enter your description title`}
                   label={"Description"}
                 />
+                <TipTap className={`mt-3`} />
                 {payload.description.length > 1 && (
                   <button
                     onClick={() => {
