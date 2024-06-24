@@ -55,37 +55,6 @@ interface PropertyDetailCardProps {
   unitOfMeasurement?: string;
 }
 
-export function PropertyDetailCard({
-  className,
-  props,
-  iconURL,
-  value,
-  unitOfMeasurement,
-}: PropertyDetailCardProps) {
-  return (
-    <div className={`${className ?? ""} flex items-center gap-1 md:pr-12 `}>
-      <div className={`flex justify-center shrink-0 w-12 h-12 `}>
-        <Image
-          className={`object-contain `}
-          alt={``}
-          src={iconURL}
-          width={28}
-          height={28}
-        />
-      </div>
-      <div className={`text-black tracking-widest`}>
-        <div className={`md:text-2xl font-bold text-black `}>
-          {value}
-          {unitOfMeasurement && (
-            <span className={`font-light `}>{unitOfMeasurement}</span>
-          )}
-        </div>
-        <div className={`text-[10px]`}>{props}</div>
-      </div>
-    </div>
-  );
-}
-
 export default function PropertyDetail({
   params: { params },
 }: {
@@ -99,6 +68,36 @@ export default function PropertyDetail({
   const [data, setData] = useState<PostPropertyProps>();
   let [current, setCurrent] = useState<number>(0);
 
+  function PropertyDetailCard({
+    className,
+    props,
+    iconURL,
+    value,
+    unitOfMeasurement,
+  }: PropertyDetailCardProps) {
+    return (
+      <div className={`${className ?? ""} flex items-center gap-1 md:pr-12 `}>
+        <div className={`flex justify-center shrink-0 w-12 h-12 `}>
+          <Image
+            className={`object-contain `}
+            alt={``}
+            src={iconURL}
+            width={28}
+            height={28}
+          />
+        </div>
+        <div className={`text-black tracking-widest`}>
+          <div className={`md:text-2xl font-bold text-black `}>
+            {value}
+            {unitOfMeasurement && (
+              <span className={`font-light `}>{unitOfMeasurement}</span>
+            )}
+          </div>
+          <div className={`text-[10px]`}>{props}</div>
+        </div>
+      </div>
+    );
+  }
   let previousSlide = () => {
     if (current === 0) setCurrent(ImageList.length - 1);
     else setCurrent(current - 1);
@@ -287,7 +286,7 @@ export default function PropertyDetail({
         </div>
 
         {/* About Us */}
-        {data?.description.map((rows: any, index: number) => (
+        {/* {data?.description.map((rows: any, index: number) => (
           <div key={index} className={`my-2 md:my-10`}>
             <div
               className={` md:text-2xl font-montserrat font-semibold text-black`}
@@ -298,7 +297,7 @@ export default function PropertyDetail({
               <RichTextRender value={rows.description} />
             </div>
           </div>
-        ))}
+        ))} */}
 
         {/* Property Gallery */}
         <div

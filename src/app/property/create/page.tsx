@@ -69,20 +69,20 @@ export default function CreateProperty() {
   const [bannerImageUploaded, setBannerImageUploaded] = useState<IImage[]>([]);
   const [galleryImage, setGalleryImage] = useState<IImage[]>([]);
 
-  const addDescription = () => {
-    let temp = { ...payload };
-    temp.description.push({
-      title: "",
-      description: "",
-    });
-    setPayload(temp);
-  };
+  // const addDescription = () => {
+  //   let temp = { ...payload };
+  //   temp.description.push({
+  //     title: "",
+  //     description: "",
+  //   });
+  //   setPayload(temp);
+  // };
 
-  const removeDescription = (index: number) => {
-    let temp = { ...payload };
-    temp.description.splice(index, 1);
-    setPayload(temp);
-  };
+  // const removeDescription = (index: number) => {
+  //   let temp = { ...payload };
+  //   temp.description.splice(index, 1);
+  //   setPayload(temp);
+  // };
 
   const handleBannerFiles = async (files: string[]) => {
     let filesInArray = Array.from(files);
