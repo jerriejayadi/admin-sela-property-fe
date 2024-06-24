@@ -72,7 +72,7 @@ export default function Property() {
             <tbody>
               {dummy.map((rows, index) => (
                 <tr key={index} className={`border-b border-[#E5E5E5]`}>
-                  <td className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-2`}>
+                  <td className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-4`}>
                     <div className={`w-10 h-10 md:w-20 md:h-20  bg-gray-300 shrink-0`} />
                     <div className={`line-clamp-3`}>{rows.name}</div>
                   </td>

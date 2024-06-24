@@ -1,5 +1,6 @@
+import BulletList from "@tiptap/extension-bullet-list";
 import Heading from "@tiptap/extension-heading";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TextBold, TextItalic } from "iconsax-react";
 
@@ -16,16 +17,22 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
       Heading.configure({
         levels: [1, 2, 3],
       }),
+      BulletList.configure({
+        HTMLAttributes: {
+          class: "list-disc",
+        },
+      }),
     ],
     content: value,
     editorProps: {
       attributes: {
-        class: "px-4 py-3 border border-gray-300 rounded-lg min-h-[300px]",
+        class:
+          "px-4 py-3 border border-gray-300 rounded-lg min-h-[150px] prose max-w-none w-full text-black prose-neutral",
       },
     },
     onUpdate({ editor }) {
       onChange && onChange(editor.getHTML());
-      console.log(editor.getHTML());
+      // console.log(editor.getJSON());
     },
   });
 
@@ -116,10 +123,10 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
         <div>
           <button
             onClick={() => {
-              editor!.chain().focus().toggleOrderedList().run();
+              editor!.chain().focus().toggleBulletList().run();
             }}
             className={`${
-              editor?.isActive("BulletList") && "bg-gray-300 bg-opacity-50"
+              editor?.isActive("bulletList") && "bg-gray-300 bg-opacity-50"
             } p-2 rounded-lg`}
           >
             <svg
