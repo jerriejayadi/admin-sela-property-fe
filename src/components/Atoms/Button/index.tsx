@@ -1,7 +1,7 @@
-interface ButtonProps {
-  disabled?: boolean;
+import { ButtonHTMLAttributes } from "react";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
-  className?: string;
   onClick?: () => void;
   children: React.ReactNode;
 }
@@ -12,13 +12,17 @@ export default function Button({
   className,
   onClick,
   children,
+  ...props
 }: ButtonProps) {
   return (
     <button
+      {...props}
+      type={props.type}
       disabled={disabled || isLoading}
-      className={`${className} bg-primary text-white w-full py-3 active:bg-opacity-80 md:hover:bg-opacity-80 `}
+      className={`${className} bg-primary text-white w-full py-3 active:bg-opacity-80 md:hover:bg-opacity-80 disabled:!bg-gray-300 disabled:!border-gray-300 disabled:!text-gray-500 `}
       onClick={onClick}
     >
+      {isLoading}
       {children}
     </button>
   );

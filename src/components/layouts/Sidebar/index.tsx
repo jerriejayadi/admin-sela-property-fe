@@ -7,7 +7,9 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { ArrowDown2, ArrowUp2, HambergerMenu } from "iconsax-react";
 import { useEffect, useRef, useState } from "react";
-import { titleFilter, toTitleCase } from "@/utils";
+import { getInitialFromName, titleFilter, toTitleCase } from "@/utils";
+import { localStorageMixins } from "@/localStorage.mixins";
+import { IProfile } from "@/service/types/auth";
 
 interface SideBarProps {
   children: React.ReactNode;
@@ -16,6 +18,12 @@ interface SideBarProps {
 export default function Sidebar({ children }: SideBarProps) {
   const router = useRouter();
   const path = usePathname();
+
+  const profile: IProfile = JSON.parse(
+    JSON.parse(localStorageMixins.get("profile")!)
+  );
+
+  const level = profile?.role === "admin" ? 2 : 1;
 
   const ref = useRef<any>(null);
 
@@ -34,22 +42,27 @@ export default function Sidebar({ children }: SideBarProps) {
   }, [ref]);
 
   const getTitle = () => {
-    const title = titleFilter(path.split(`/`)[1]);
+    const title = titleFilter(path?.split(`/`)[1]);
 
     setTitle(toTitleCase(title));
+  };
+
+  const handleLogout = () => {
+    localStorageMixins.remove("access_token");
+    router.push("/login");
   };
 
   useEffect(() => {
     getTitle();
   }, [path]);
   const [menu, setMenu] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>(toTitleCase(path.split(`/`)[1]));
+  const [title, setTitle] = useState<string>(toTitleCase(path?.split(`/`)[1]));
   return (
     <div className={``}>
       <div className={`flex`}>
         {/* Sidebar */}
         <div
-          className={` w-full fixed bottom-0 mx-0 md:sticky  md:mx-0  md:left-0 md:top-0 md:w-[300px] bg-gray-900  text-white md:h-screen md:flex flex-col items-start justify-between gap-5 z-50`}
+          className={`shrink-0 w-full fixed bottom-0 mx-0 md:sticky  md:mx-0  md:left-0 md:top-0 md:w-[300px] bg-gray-900  text-white md:h-screen md:flex flex-col items-start justify-between gap-5 z-50`}
         >
           <div className={`w-full mx-auto max-w-[350px] md:mx-0 overflow-auto`}>
             {/* icon */}
@@ -74,24 +87,26 @@ export default function Sidebar({ children }: SideBarProps) {
             <div
               className={`flex items-center md:items-start justify-around md:flex-col py-2 gap-2 md:mt-5 overflow-auto overflow px-4`}
             >
-              {listMenu?.map((rows, index) => (
-                <Link
-                  className={`flex items-center gap-2 justify-center md:justify-start px-3 py-3 md:rounded-lg w-full ${
-                    path === rows.path
-                      ? "bg-white bg-opacity-10 text-white rounded-xl"
-                      : "text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300"
-                  } `}
-                  key={index}
-                  href={rows.path ?? ""}
-                >
-                  {rows.icon}
-                  <span
-                    className={`hidden md:block font-montserrat font-normal`}
+              {listMenu
+                ?.filter((rows) => rows.level <= level)
+                .map((rows, index) => (
+                  <Link
+                    className={`flex items-center gap-2 justify-center md:justify-start px-3 py-3 md:rounded-lg w-full ${
+                      path === rows.path
+                        ? "bg-white bg-opacity-10 text-white rounded-xl"
+                        : "text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300"
+                    } `}
+                    key={index}
+                    href={rows.path ?? ""}
                   >
-                    {rows.name}
-                  </span>
-                </Link>
-              ))}
+                    {rows.icon}
+                    <span
+                      className={`hidden md:block font-montserrat font-normal`}
+                    >
+                      {rows.name}
+                    </span>
+                  </Link>
+                ))}
             </div>
           </div>
           {/* <button
@@ -128,10 +143,26 @@ export default function Sidebar({ children }: SideBarProps) {
               className={` relative flex items-center justify-end gap-2 cursor-pointer`}
             >
               <div className={`font-montserrat text-end hidden md:block`}>
-                <div className={`font-medium text-sm`}>Jerrie Jayadi</div>
-                <div className={`text-xs text-gray-500`}>Admin</div>
+                <div className={`font-medium text-sm`}>{profile?.username}</div>
+                <div className={`text-xs text-gray-500`}>{profile?.role}</div>
               </div>
-              <div className={`w-11 h-11 rounded-[100%] bg-gray-300`} />
+              {profile?.image ? (
+                <Image
+                  className={`w-11 h-11 object-cover rounded-[100%]`}
+                  alt={``}
+                  src={profile?.image}
+                  loader={({ src }) => src}
+                  width={300}
+                  height={300}
+                />
+              ) : (
+                <div
+                  className={`w-11 h-11 rounded-full bg-slate-900 text-white  text-2xl flex items-center justify-center`}
+                >
+                  {getInitialFromName(profile?.username)}
+                </div>
+              )}
+
               <div>{menu ? <ArrowUp2 /> : <ArrowDown2 />}</div>
               <div
                 onClick={(e) => {
@@ -153,11 +184,12 @@ export default function Sidebar({ children }: SideBarProps) {
                     Settings
                   </div>
                 </div>
-                <div
-                  className={`w-full active:text-primary md:hover:text-primary py-4`}
+                <button
+                  onClick={handleLogout}
+                  className={`w-full text-left active:text-primary md:hover:text-primary py-4`}
                 >
                   Logout
-                </div>
+                </button>
               </div>
             </div>
           </div>

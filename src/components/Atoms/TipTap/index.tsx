@@ -3,6 +3,7 @@ import Heading from "@tiptap/extension-heading";
 import { EditorContent, JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TextBold, TextItalic } from "iconsax-react";
+import { useEffect } from "react";
 
 interface TipTapProps {
   value?: string;
@@ -43,7 +44,14 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
   //       .toggleHeading({ level: Number(heading) })
   //       .run();
   //   };
-
+  useEffect(() => {
+    // this is just an example. do whatever you want to do here
+    // to retrieve your editors content from somewhere
+    if (editor) {
+      editor.commands.clearContent();
+      editor?.commands.setContent(value!);
+    }
+  }, [value, editor]);
   return (
     <div className={className}>
       <div

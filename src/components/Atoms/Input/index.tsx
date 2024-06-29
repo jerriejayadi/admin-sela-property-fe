@@ -1,6 +1,7 @@
 import { ChangeEvent, InputHTMLAttributes } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  errorMessage?: string;
   prefix?: string;
   labelClassName?: string;
   className?: string;
@@ -9,6 +10,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export default function Input({
+  errorMessage,
   className,
   label,
   withPrefix = false,
@@ -35,6 +37,7 @@ export default function Input({
           }   focus:outline-none  px-5 py-3  w-full `}
         />
       </div>
+      {errorMessage && <div className={`text-red-500 text-sm mt-2`}>{errorMessage}</div>}
     </div>
   );
 }

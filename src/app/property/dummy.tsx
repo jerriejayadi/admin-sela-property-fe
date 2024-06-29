@@ -1,11 +1,21 @@
-export const dummy = [
+export interface DummyProps {
+  name: string;
+  price: string | number;
+  availability: string;
+  landSize: string | number;
+  buildSize: string | number;
+  status: string;
+  published: boolean;
+}
+
+export const dummy: DummyProps[] = [
   {
     name: "Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool",
     price: 4000000000,
     availability: "Available",
     landSize: 300,
     buildSize: 300,
-    status: "Approved",
+    status: "approved",
     published: false,
   },
   {
@@ -14,7 +24,7 @@ export const dummy = [
     availability: "Available",
     landSize: 300,
     buildSize: 300,
-    status: "Approved",
+    status: "approved",
     published: true,
   },
   {
@@ -23,7 +33,7 @@ export const dummy = [
     availability: "Available",
     landSize: 300,
     buildSize: 300,
-    status: "Approved",
+    status: "in_review",
     published: false,
   },
   {
@@ -32,7 +42,7 @@ export const dummy = [
     availability: "Available",
     landSize: 300,
     buildSize: 300,
-    status: "Approved",
+    status: "rejected",
     published: true,
   },
 ];

@@ -1,4 +1,7 @@
 "use client";
+import { localStorageMixins } from "@/localStorage.mixins";
+import { postLogin } from "@/service/api/auth";
+import { useRequest } from "ahooks";
 import { CloseCircle } from "iconsax-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,13 +19,19 @@ export default function Login() {
   });
   const [error, setError] = useState<boolean>(false);
 
+  const { runAsync } = useRequest(postLogin);
+
   const handleLogin = () => {
-    console.log(login);
-    if (login.email === "admin" && login.password === "admin") {
-      router.replace(`/`);
-    } else {
-      setError(true);
-    }
+    runAsync(login)
+      .then((res) => {
+        localStorageMixins.set("access_token", res.result.access_token);
+        localStorageMixins.set("profile", JSON.stringify(res.result.profile));
+        router.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(true);
+      });
   };
   return (
     <div className={`flex items-center justify-center   w-full h-screen`}>

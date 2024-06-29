@@ -49,3 +49,34 @@ export const titleFilter = (title: string) => {
       return title;
   }
 };
+
+export const statusColorChip = (status: string) => {
+  switch (status) {
+    case "in_review":
+      return "warning";
+    case "approved":
+      return "success";
+    case "rejected":
+      return "error";
+    default:
+      return "success";
+  }
+};
+
+export const getInitialFromName = (name: string) => {
+  let nameArray = name?.split(" ");
+  nameArray = nameArray?.map((rows) => rows.charAt(0).toUpperCase());
+  console.log(nameArray);
+  return nameArray?.join("");
+};
+
+export const translateStatusProperty = (status: string) => {
+  const splittedStatus = status.split("_");
+
+  for (let i = 0; i < splittedStatus.length; i++) {
+    splittedStatus[i] =
+      splittedStatus[i].charAt(0).toUpperCase() +
+      splittedStatus[i].substring(1).toLowerCase();
+  }
+  return splittedStatus.join(" ");
+};
