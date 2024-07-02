@@ -123,7 +123,7 @@ export default function Sidebar({ children }: SideBarProps) {
 
         <div className={` flex flex-col w-full`}>
           <div
-            className={`sticky top-0 w-full bg-white text-black flex items-center justify-between px-6 py-4 shadow-sm z-50`}
+            className={`sticky top-0 w-full bg-white text-black flex items-center justify-between px-6 py-4 shadow-sm z-40`}
           >
             <div
               className={`flex items-center gap-3 text-2xl font-montserrat font-semibold`}
