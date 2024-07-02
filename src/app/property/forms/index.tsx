@@ -11,6 +11,7 @@ import { localStorageMixins } from "@/localStorage.mixins";
 import Input from "@/components/Atoms/Input";
 import { PostPropertyProps } from "@/service/types/property/postProperty";
 import { IDetailPropertyImage } from "@/service/types/property/propertyDetail";
+import Image from "next/image";
 
 interface IImage extends IDetailPropertyImage {
   file?: string;
@@ -503,7 +504,20 @@ export default function Forms({
           </div> */}
         <div className={`bg-white divide-y px-6 py-5`}>
           <div className={`pb-4 font-montserrat`}>
-            <div className={` font-medium body1`}>Property Description</div>
+            <div
+              className={` font-medium body1 flex justify-between items-center`}
+            >
+              <div>Property Description</div>
+              <div>
+                <Image
+                  className={`w-10 h-10 rounded-[100%]`}
+                  alt={``}
+                  src={`/icons/indonesia-flag.png`}
+                  width={60}
+                  height={60}
+                />
+              </div>
+            </div>
             <div className={`body3 text-gray-400 mt-1`}>
               Description of the Property. You may input more than 1 description
               section
@@ -549,46 +563,68 @@ export default function Forms({
           </div>
         </div>
 
-        {/* Gallery */}
-        {/* <div className={`bg-white divide-y px-6 py-5 mt-4 `}>
-            <div className={` pb-3 font-montserrat`}>
-              <div className={` font-medium body1`}>Gallery</div>
-              <div className={`body3 text-gray-400 mt-1`}>
-                Picture for the Gallery
+        {/* Property Description ID */}
+
+        <div className={`bg-white divide-y px-6 py-5 mt-10`}>
+          <div className={`pb-4 font-montserrat`}>
+            <div
+              className={` font-medium body1 flex justify-between items-center`}
+            >
+              <div>Property Description</div>
+              <div>
+                <Image
+                  className={`w-10 h-10`}
+                  alt={``}
+                  src={`/icons/United-states_flag_icon_round.svg.png`}
+                  width={60}
+                  height={60}
+                />
               </div>
             </div>
-            <div className={`flex flex-col py-5 gap-5`}>
-              <UploadFile
-                id={"normal-image"}
+            <div className={`body3 text-gray-400 mt-1`}>
+              Description of the Property. You may input more than 1 description
+              section
+            </div>
+          </div>
+          <div className={`flex flex-col pt-4 gap-6`}>
+            <div>
+              <div className={`font-montserrat body1 mb-4 `}>Description</div>
+
+              <TipTap
+                value={formik.values.description}
+                className={`mt-3`}
                 onChange={(e) => {
-                  alert("normal");
-                  handleBannerFiles(e, "normal");
+                  formik.setFieldValue("description", e);
                 }}
               />
-              <div className={`flex gap-5 flex-wrap`}>
-                {image.filter((rows) => rows.type === "normal").length >
-                  0 &&
-                  image
-                    .filter((rows) => rows.type === "normal")
-                    .map((rows, index) => (
-                      <>
-                        <UploadImage
-                          onRemove={(url) => {
-                            handleBannerRemove(url, index);
-                          }}
-                          key={index}
-                          file={rows.file}
-                          onFinishUpload={(url) => {
-                            handleBannerURL(url, index);
-                          }}
-                          url={rows.url}
-                        />
-                        <CloseCircle className={`absolute top-0 right-0`} />
-                      </>
-                    ))}
-              </div>
+
+              {formik.errors.description && (
+                <div className={`text-red-500 text-sm mt-2`}>
+                  {formik.errors.description}
+                </div>
+              )}
             </div>
-          </div> */}
+          </div>
+          <div className={`flex flex-col pt-4 gap-6`}>
+            <div>
+              <div className={`font-montserrat body1 mb-4 `}>Key Feature</div>
+
+              <TipTap
+                value={formik.values.keyFeature}
+                className={`mt-3`}
+                onChange={(e) => {
+                  formik.setFieldValue("keyFeature", e);
+                }}
+              />
+
+              {formik.errors.keyFeature && (
+                <div className={`text-red-500 text-sm mt-2`}>
+                  {formik.errors.keyFeature}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
         <div
           className={`w-full flex flex-col md:flex-row items-center justify-end mt-10 gap-5 pb-20 md:pb-0`}

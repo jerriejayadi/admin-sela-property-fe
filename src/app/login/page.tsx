@@ -19,7 +19,7 @@ export default function Login() {
   });
   const [error, setError] = useState<boolean>(false);
 
-  const { runAsync, loading } = useRequest(postLogin);
+  const { runAsync, loading } = useRequest(postLogin, { manual: true });
 
   const handleLogin = () => {
     runAsync(login)
