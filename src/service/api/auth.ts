@@ -4,5 +4,5 @@ import { RequestLoginProps, ResponseLoginProps } from "../types/auth";
 export const postLogin = (
   request: RequestLoginProps
 ): Promise<ResponseLoginProps> => {
-  return apiClient.post(`http://localhost:3002/api/login`, request);
+  return apiClient.post(`/api/login`, request);
 };

@@ -19,7 +19,7 @@ export default function Login() {
   });
   const [error, setError] = useState<boolean>(false);
 
-  const { runAsync } = useRequest(postLogin);
+  const { runAsync, loading } = useRequest(postLogin);
 
   const handleLogin = () => {
     runAsync(login)
@@ -89,11 +89,12 @@ export default function Login() {
 
             <div>
               <button
+                disabled={loading}
                 onClick={(e) => {
                   e.preventDefault();
                   handleLogin();
                 }}
-                className={`bg-primary hover:bg-orange-700 text-white px-5 py-2 rounded-lg w-full transition-all duration-150`}
+                className={`bg-primary hover:bg-orange-700 text-white px-5 py-2 rounded-lg w-full transition-all duration-150 disabled:bg-gray-500`}
               >
                 Login
               </button>

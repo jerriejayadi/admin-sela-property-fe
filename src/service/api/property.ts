@@ -8,7 +8,7 @@ import {
 export const getPropertyList = (
   params: RequestPropertyListParamsProps
 ): Promise<ResponsePropertyProps> => {
-  return apiClient.get(`http://localhost:3002/api/property`, {
+  return apiClient.get(`/api/property`, {
     params: params,
   });
 };
