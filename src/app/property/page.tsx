@@ -47,6 +47,10 @@ export default function Property() {
       setData(res.result);
     });
   }, []);
+
+  useEffect(() => {
+    console.log(profile);
+  }, [profile]);
   return (
     <div className={`text-black flex flex-col gap-6 pb-20`}>
       {/* Table */}
@@ -82,7 +86,7 @@ export default function Property() {
           </div>
 
           {/* Button Property */}
-          {(profile?.role === "admin" || profile?.role === "listing_agent") && (
+          {(profile?.role === "ADMIN" || profile?.role === "listing_agent") && (
             <Link
               href={`/property/create`}
               className={`w-full md:max-w-[250px] flex grow-0 body2 items-center justify-center bg-primary hover:bg-orange-700 active:bg-orange-700 text-white rounded-lg px-3 gap-2 py-2`}
@@ -119,7 +123,7 @@ export default function Property() {
               </tr>
             </thead>
             <tbody>
-              {data?.map((rows:any, index:number) => (
+              {data?.map((rows: any, index: number) => (
                 <tr
                   onClick={() => {
                     router.push(`/property/detail/${rows.id}`);
@@ -195,7 +199,7 @@ export default function Property() {
                       </svg>
                       <div>Detail</div>
                     </button>
-                    {profile.role === "admin" && (
+                    {profile?.role! === "ADMIN" && (
                       <>
                         <button
                           onClick={() => {

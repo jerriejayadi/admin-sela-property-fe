@@ -26,12 +26,12 @@ export default function Sidebar({ children }: SideBarProps) {
   const path = usePathname();
 
   const [profile, setProfile] = useState<IProfile>();
+  const [level, setLevel] = useState<number>(1);
   useEffect(() => {
     const profile = myProfile();
+    setLevel(profile?.role! === "ADMIN" ? 2 : 1);
     setProfile(profile);
   }, []);
-
-  const level = profile?.role === "ADMIN" ? 2 : 1;
 
   const ref = useRef<any>(null);
 
@@ -154,7 +154,7 @@ export default function Sidebar({ children }: SideBarProps) {
               <div className={`font-montserrat text-end hidden md:block`}>
                 <div className={`font-medium text-sm`}>{profile?.name}</div>
                 <div className={`text-xs text-gray-500`}>
-                  {translateRoleUser(profile?.role ?? "")}
+                  {translateRoleUser(profile?.role! ?? "")}
                 </div>
               </div>
               {profile?.image ? (

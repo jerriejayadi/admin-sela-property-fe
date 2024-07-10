@@ -133,7 +133,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
     <div className={` max-w-[1150px] pb-20`}>
       <div className={`mb-4 w-full flex justify-between`}>
         <div className={`font-montserrat font-semibold text-3xl`}>Preview</div>
-        {(profile.role === "admin" || profile.role === "listing_agent") && (
+        {(profile?.role! === "ADMIN" || profile?.role! === "listing_agent") && (
           <Link
             className={`py-3 bg-primary rounded-lg px-5 text-white`}
             href={`/property/edit/${params.id}`}

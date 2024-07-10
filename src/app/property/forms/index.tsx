@@ -187,7 +187,7 @@ export default function Forms({
       {/* Left side */}
       <div className={`w-full md:w-[50%]`}>
         {/* Status */}
-        {profile!.role === "admin" && (
+        {profile?.role! === "ADMIN" && (
           <div className={`bg-white divide-y px-6 py-5 mb-4 `}>
             <div className={` pb-3 font-montserrat`}>
               <div className={` font-medium body1`}>Status</div>

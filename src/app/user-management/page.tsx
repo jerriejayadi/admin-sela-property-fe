@@ -87,7 +87,7 @@ export default function UserManagement() {
                 <tr key={index} className="border-b border-[#E5E5E5]">
                   <td className={`pl-4 md:pl-8 pr-3 py-3 `}>{rows.name}</td>
                   <td className={`px-3 py-2 `}>
-                    {translateRoleUser(rows.role)}
+                    {translateRoleUser(rows.role ?? '')}
                   </td>
                   {/* <td className={`px-3 py-2 `}>{rows.createdAt}</td> */}
                   <td className={`px-3 py-2 `}>
