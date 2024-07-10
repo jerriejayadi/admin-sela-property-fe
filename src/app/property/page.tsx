@@ -29,7 +29,7 @@ export default function Property() {
   const router = useRouter();
   const [pagination, setPagination] = useState<number>(1);
 
-  const [data, setData] = useState<IPropertyList[]>();
+  const [data, setData] = useState<any>();
 
   const { data: resProperty, runAsync, loading } = useRequest(getPropertyList);
 
@@ -44,7 +44,7 @@ export default function Property() {
 
   useEffect(() => {
     runAsync({}).then((res) => {
-      setData(res.result.items);
+      setData(res.result);
     });
   }, []);
   return (
@@ -82,7 +82,7 @@ export default function Property() {
           </div>
 
           {/* Button Property */}
-          {(profile.role === "admin" || profile.role === "listing_agent") && (
+          {(profile?.role === "admin" || profile?.role === "listing_agent") && (
             <Link
               href={`/property/create`}
               className={`w-full md:max-w-[250px] flex grow-0 body2 items-center justify-center bg-primary hover:bg-orange-700 active:bg-orange-700 text-white rounded-lg px-3 gap-2 py-2`}
@@ -119,7 +119,7 @@ export default function Property() {
               </tr>
             </thead>
             <tbody>
-              {data?.map((rows, index) => (
+              {data?.map((rows:any, index:number) => (
                 <tr
                   onClick={() => {
                     router.push(`/property/detail/${rows.id}`);
@@ -128,7 +128,7 @@ export default function Property() {
                   className={`border-b border-[#E5E5E5] hover:bg-gray-100 bg-white`}
                 >
                   <td
-                    className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-4 sticky left-0 bg-inherit`}
+                    className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-4 sticky left-0 bg-inherit z-40`}
                   >
                     <Image
                       alt={""}
@@ -162,7 +162,7 @@ export default function Property() {
                           checked={rows.published}
                           className="sr-only peer"
                         />
-                        <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                        <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary "></div>
                       </label>
                     ) : (
                       <Chip color={rows.published ? "success" : "disabled"}>

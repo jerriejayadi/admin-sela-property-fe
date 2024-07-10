@@ -9,6 +9,7 @@ import { ArrowDown2, ArrowUp2, HambergerMenu } from "iconsax-react";
 import { useEffect, useRef, useState } from "react";
 import {
   getInitialFromName,
+  myProfile,
   titleFilter,
   toTitleCase,
   translateRoleUser,
@@ -26,10 +27,11 @@ export default function Sidebar({ children }: SideBarProps) {
 
   const [profile, setProfile] = useState<IProfile>();
   useEffect(() => {
-    setProfile(JSON.parse(localStorageMixins.get(`profile`)!));
+    const profile = myProfile();
+    setProfile(profile);
   }, []);
 
-  const level = profile?.role === "admin" ? 2 : 1;
+  const level = profile?.role === "ADMIN" ? 2 : 1;
 
   const ref = useRef<any>(null);
 
