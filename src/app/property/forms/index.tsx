@@ -10,8 +10,12 @@ import { uploadFile, getFile, deleteFile } from "@/firebase/uploadFile";
 import { localStorageMixins } from "@/localStorage.mixins";
 import Input from "@/components/Atoms/Input";
 import { PostPropertyProps } from "@/service/types/property/postProperty";
-import { IDetailPropertyImage, IResult } from "@/service/types/property/propertyDetail";
+import {
+  IDetailPropertyImage,
+  IResult,
+} from "@/service/types/property/propertyDetail";
 import Image from "next/image";
+import { ERole } from "@/service/types/user/postUser";
 
 interface IImage extends IDetailPropertyImage {
   file?: string;
@@ -187,7 +191,7 @@ export default function Forms({
       {/* Left side */}
       <div className={`w-full md:w-[50%]`}>
         {/* Status */}
-        {profile?.role! === "ADMIN" && (
+        {profile?.role! === ERole.ADMIN && (
           <div className={`bg-white divide-y px-6 py-5 mb-4 `}>
             <div className={` pb-3 font-montserrat`}>
               <div className={` font-medium body1`}>Status</div>
