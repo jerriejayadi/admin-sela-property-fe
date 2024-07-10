@@ -21,11 +21,12 @@ interface FormsProps {
   initialValue?: PostPropertyProps;
   fetchLoading?: boolean;
   submitLoading?: boolean;
+  onSubmit: (_args: PostPropertyProps) => void;
 }
 
 export default function Forms({
   initialValue,
-
+  onSubmit,
   submitLoading,
 }: FormsProps) {
   const [initialValues, setInitialValues] = useState<PostPropertyProps>({
@@ -33,15 +34,18 @@ export default function Forms({
     propertyType: "villa",
     price: "",
     // description: [{ title: "", description: "Hello World" }],
-    description: "",
-    keyFeature: "",
+    googleDriveUrl: "",
+    descriptionEn: "",
+    keyFeatureEn: "",
+    descriptionId: "",
+    keyFeatureId: "",
     status: false,
     published: false,
     availability: false,
     landSize: "",
-    landSizeMeasurement: "",
+    landSizeMeasurement: "sqm",
     buildingSize: "",
-    buildingSizeMeasurement: "",
+    buildingSizeMeasurement: "sqm",
     bedRoomsAmount: "",
     bathRoomsAmount: "",
     carParkAmount: "",
@@ -56,8 +60,9 @@ export default function Forms({
     title: yup.string().required("Title is required"),
     propertyType: yup.string().required("Type is required"),
     price: yup.string().required("Price must be greater than 0"),
-    description: yup.string().required("Description is Required"),
-    keyFeature: yup.string().required("Key Feature must be filled"),
+    googleDriveUrl: yup.string().required("Google Drive URL must be included"),
+    descriptionId: yup.string().required("Description is Required"),
+    keyFeatureId: yup.string().required("Key Feature must be filled"),
     landSize: yup.string().required("Land size must be filled"),
     buildingSize: yup.string().required("Building Size must be filled"),
     bedRoomsAmount: yup.string().required("Bedrooms amount must be filled"),
@@ -77,6 +82,8 @@ export default function Forms({
   const [modalFailed, setModalFailed] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const profile = JSON.parse(localStorageMixins.get(`profile`)!);
 
   const handleBannerFiles = async (
     files: string[],
@@ -153,10 +160,20 @@ export default function Forms({
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission
-      handleSubmit(values);
+      const submit = {
+        ...values,
+        price: values.price.replaceAll(",", ""),
+        bedRoomsAmount: values.bedRoomsAmount.replaceAll(",", ""),
+        bathRoomsAmount: values.bathRoomsAmount.replaceAll(",", ""),
+        buildingSize: values.buildingSize.replaceAll(",", ""),
+        carParkAmount: values.carParkAmount.replaceAll(",", ""),
+        images: image,
+        facilities: [],
+        tags: [],
+      };
+      onSubmit(submit);
     },
     validateOnChange: true,
-    validateOnMount: true,
     validateOnBlur: true,
     enableReinitialize: true,
   });
@@ -170,49 +187,49 @@ export default function Forms({
       {/* Left side */}
       <div className={`w-full md:w-[50%]`}>
         {/* Status */}
-        <div className={`bg-white divide-y px-6 py-5 `}>
-          <div className={` pb-3 font-montserrat`}>
-            <div className={` font-medium body1`}>Status</div>
-            <div className={`body3 text-gray-400 mt-1`}>
-              Picture for the main banner
+        {profile!.role === "admin" && (
+          <div className={`bg-white divide-y px-6 py-5 mb-4 `}>
+            <div className={` pb-3 font-montserrat`}>
+              <div className={` font-medium body1`}>Status</div>
+              <div className={`body3 text-gray-400 mt-1`}>Data Status</div>
             </div>
-          </div>
-          <div className={`flex flex-col py-5 gap-5`}>
-            <div className={`flex items-center justify-between`}>
-              <div>Availability</div>
-              <div>
-                <label className="inline-flex items-center cursor-pointer">
-                  <input
-                    name={`availability`}
-                    onChange={formik.handleChange}
-                    type="checkbox"
-                    checked={formik.values.availability}
-                    className="sr-only peer"
-                  />
-                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                </label>
+            <div className={`flex flex-col py-5 gap-5`}>
+              <div className={`flex items-center justify-between`}>
+                <div>Availability</div>
+                <div>
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      name={`availability`}
+                      onChange={formik.handleChange}
+                      type="checkbox"
+                      checked={formik.values.availability}
+                      className="sr-only peer"
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+              </div>
+              <div className={`flex items-center justify-between`}>
+                <div>Published</div>
+                <div>
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      name={`published`}
+                      onChange={formik.handleChange}
+                      type="checkbox"
+                      checked={formik.values.published}
+                      className="sr-only peer"
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                  </label>
+                </div>
               </div>
             </div>
-            <div className={`flex items-center justify-between`}>
-              <div>Published</div>
-              <div>
-                <label className="inline-flex items-center cursor-pointer">
-                  <input
-                    name={`published`}
-                    onChange={formik.handleChange}
-                    type="checkbox"
-                    checked={formik.values.published}
-                    className="sr-only peer"
-                  />
-                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                </label>
-              </div>
-            </div>
           </div>
-        </div>
+        )}
 
         {/* Attachment */}
-        <div className={`bg-white divide-y px-6 py-5 mt-4 `}>
+        <div className={`bg-white divide-y px-6 py-5 `}>
           <div className={` pb-3 font-montserrat`}>
             <div className={` font-medium body1`}>Images</div>
             <div className={`body3 text-gray-400 mt-1`}>
@@ -251,6 +268,17 @@ export default function Forms({
                 Must upload at least 1 image
               </div>
             )}
+            <Input
+              errorMessage={
+                formik.touched.googleDriveUrl && formik.errors.googleDriveUrl
+              }
+              value={formik.values.googleDriveUrl}
+              id={"googleDriveUrl"}
+              name={"googleDriveUrl"}
+              placeholder={"Enter Link to Google Drive"}
+              label={"Google Drive Link"}
+              onChange={formik.handleChange}
+            />
           </div>
         </div>
 
@@ -265,7 +293,7 @@ export default function Forms({
           <div className={`flex flex-col py-5 gap-5`}>
             <div className={`grid md:grid-cols-2 gap-5`}>
               <Input
-                errorMessage={formik.errors.title}
+                errorMessage={formik.touched.title && formik.errors.title}
                 value={formik.values.title}
                 id={"title"}
                 name={"title"}
@@ -286,6 +314,9 @@ export default function Forms({
                 >
                   <option value={"house"}>House</option>
                   <option value={"villa"}>Villa</option>
+                  <option value={"apartment"}>Apartment</option>
+                  <option value={"land"}>Tanah</option>
+                  <option value={"others"}>Lain-lain</option>
                 </select>
                 {formik.errors.propertyType && (
                   <div className={`text-red-500 text-sm`}>
@@ -296,7 +327,7 @@ export default function Forms({
             </div>
 
             <Input
-              errorMessage={formik.errors.price}
+              errorMessage={formik.touched.price && formik.errors.price}
               value={formik.values.price}
               withPrefix
               prefix={"Rp"}
@@ -321,7 +352,9 @@ export default function Forms({
               </div> */}
             <div className={`grid md:grid-cols-2 gap-5`}>
               <Input
-                errorMessage={formik.errors.buildingSize}
+                errorMessage={
+                  formik.touched.buildingSize && formik.errors.buildingSize
+                }
                 value={formik.values.buildingSize}
                 id={"buildingSize"}
                 name={"buildingSize"}
@@ -335,7 +368,7 @@ export default function Forms({
                 }}
               />
               <Input
-                errorMessage={formik.errors.landSize}
+                errorMessage={formik.touched.landSize && formik.errors.landSize}
                 value={formik.values.landSize}
                 id={"landSize"}
                 name={"landSize"}
@@ -351,7 +384,9 @@ export default function Forms({
             </div>
             <div className={`grid md:grid-cols-3 gap-5`}>
               <Input
-                errorMessage={formik.errors.bedRoomsAmount}
+                errorMessage={
+                  formik.touched.bedRoomsAmount && formik.errors.bedRoomsAmount
+                }
                 value={formik.values.bedRoomsAmount}
                 id={"bedRoomsAmount"}
                 name={"bedRoomsAmount"}
@@ -365,7 +400,10 @@ export default function Forms({
                 }}
               />
               <Input
-                errorMessage={formik.errors.bathRoomsAmount}
+                errorMessage={
+                  formik.touched.bathRoomsAmount &&
+                  formik.errors.bathRoomsAmount
+                }
                 value={formik.values.bathRoomsAmount}
                 id={"bathRoomsAmount"}
                 name={"bathRoomsAmount"}
@@ -379,7 +417,9 @@ export default function Forms({
                 }}
               />
               <Input
-                errorMessage={formik.errors.carParkAmount}
+                errorMessage={
+                  formik.touched.carParkAmount && formik.errors.carParkAmount
+                }
                 value={formik.values.carParkAmount}
                 id={"carParkAmount"}
                 name={"carParkAmount"}
@@ -398,7 +438,10 @@ export default function Forms({
               <div className={`pt-3`}>
                 <div className={`grid md:grid-cols-3 gap-4`}>
                   <Input
-                    errorMessage={formik.errors.address?.subdistrict}
+                    errorMessage={
+                      formik.touched.address?.subdistrict &&
+                      formik.errors.address?.subdistrict
+                    }
                     value={formik.values.address.subdistrict}
                     id={"title"}
                     name={"address.subdistrict"}
@@ -407,7 +450,10 @@ export default function Forms({
                     onChange={formik.handleChange}
                   />
                   <Input
-                    errorMessage={formik.errors.address?.regency}
+                    errorMessage={
+                      formik.touched.address?.regency &&
+                      formik.errors.address?.regency
+                    }
                     value={formik.values.address.regency}
                     id={"regency"}
                     name={"address.regency"}
@@ -416,7 +462,10 @@ export default function Forms({
                     onChange={formik.handleChange}
                   />
                   <Input
-                    errorMessage={formik.errors.address?.province}
+                    errorMessage={
+                      formik.touched.address?.province &&
+                      formik.errors.address?.province
+                    }
                     value={formik.values.address.province}
                     id={"province"}
                     name={"address.province"}
@@ -427,7 +476,10 @@ export default function Forms({
                 </div>
                 <div className={`mt-3`}>
                   <Input
-                    errorMessage={formik.errors.address?.locationMaps}
+                    errorMessage={
+                      formik.touched.address?.locationMaps &&
+                      formik.errors.address?.locationMaps
+                    }
                     value={formik.values.address.locationMaps}
                     id={"locationMaps"}
                     name={"address.locationMaps"}
@@ -528,16 +580,16 @@ export default function Forms({
               <div className={`font-montserrat body1 mb-4 `}>Description</div>
 
               <TipTap
-                value={formik.values.description}
+                value={formik.values.descriptionId}
                 className={`mt-3`}
                 onChange={(e) => {
-                  formik.setFieldValue("description", e);
+                  formik.setFieldValue("descriptionId", e);
                 }}
               />
 
-              {formik.errors.description && (
+              {formik.touched.descriptionId && formik.errors.descriptionId && (
                 <div className={`text-red-500 text-sm mt-2`}>
-                  {formik.errors.description}
+                  {formik.errors.descriptionId}
                 </div>
               )}
             </div>
@@ -547,23 +599,23 @@ export default function Forms({
               <div className={`font-montserrat body1 mb-4 `}>Key Feature</div>
 
               <TipTap
-                value={formik.values.keyFeature}
+                value={formik.values.keyFeatureId}
                 className={`mt-3`}
                 onChange={(e) => {
-                  formik.setFieldValue("keyFeature", e);
+                  formik.setFieldValue("keyFeatureId", e);
                 }}
               />
 
-              {formik.errors.keyFeature && (
+              {formik.touched.keyFeatureId && formik.errors.keyFeatureId && (
                 <div className={`text-red-500 text-sm mt-2`}>
-                  {formik.errors.keyFeature}
+                  {formik.errors.keyFeatureId}
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Property Description ID */}
+        {/* Property Description EN */}
 
         <div className={`bg-white divide-y px-6 py-5 mt-10`}>
           <div className={`pb-4 font-montserrat`}>
@@ -591,16 +643,16 @@ export default function Forms({
               <div className={`font-montserrat body1 mb-4 `}>Description</div>
 
               <TipTap
-                value={formik.values.description}
+                value={formik.values.descriptionEn}
                 className={`mt-3`}
                 onChange={(e) => {
-                  formik.setFieldValue("description", e);
+                  formik.setFieldValue("descriptionEn", e);
                 }}
               />
 
-              {formik.errors.description && (
+              {formik.touched.descriptionEn && formik.errors.descriptionEn && (
                 <div className={`text-red-500 text-sm mt-2`}>
-                  {formik.errors.description}
+                  {formik.errors.descriptionEn}
                 </div>
               )}
             </div>
@@ -610,16 +662,16 @@ export default function Forms({
               <div className={`font-montserrat body1 mb-4 `}>Key Feature</div>
 
               <TipTap
-                value={formik.values.keyFeature}
+                value={formik.values.keyFeatureEn}
                 className={`mt-3`}
                 onChange={(e) => {
-                  formik.setFieldValue("keyFeature", e);
+                  formik.setFieldValue("keyFeatureEn", e);
                 }}
               />
 
-              {formik.errors.keyFeature && (
+              {formik.touched.keyFeatureEn && formik.errors.keyFeatureEn && (
                 <div className={`text-red-500 text-sm mt-2`}>
-                  {formik.errors.keyFeature}
+                  {formik.errors.keyFeatureEn}
                 </div>
               )}
             </div>
@@ -630,6 +682,7 @@ export default function Forms({
           className={`w-full flex flex-col md:flex-row items-center justify-end mt-10 gap-5 pb-20 md:pb-0`}
         >
           <Button
+            type="button"
             isLoading={submitLoading}
             onClick={() => {
               setModalDiscard(true);
@@ -644,6 +697,7 @@ export default function Forms({
             onClick={() => {
               setModalSubmit(true);
             }}
+            disabled={!formik.isValid || image.length === 0}
             className={`md:max-w-32`}
           >
             Save

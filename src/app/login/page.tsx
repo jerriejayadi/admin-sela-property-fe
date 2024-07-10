@@ -4,7 +4,7 @@ import { postLogin } from "@/service/api/auth";
 import { useRequest } from "ahooks";
 import { CloseCircle } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface LoginProps {
   email: string;
@@ -25,7 +25,7 @@ export default function Login() {
     runAsync(login)
       .then((res) => {
         localStorageMixins.set("access_token", res.result.access_token);
-        localStorageMixins.set("profile", JSON.stringify(res.result.profile));
+        localStorageMixins.set("profile", res.result.profile);
         router.push("/");
       })
       .catch((err) => {
@@ -33,19 +33,22 @@ export default function Login() {
         setError(true);
       });
   };
+
+  // useEffect(() => {
+  //   if (localStorageMixins.get(`access_token`)) {
+  //     router.push("/");
+  //   }
+  // }, []);
   return (
     <div className={`flex items-center justify-center   w-full h-screen`}>
-      <div className={`w-[60%] bg-secondary h-full flex items-center`}>
-        Hello World
-      </div>
       <div
-        className={`w-[40%] h-full flex items-center bg-[#F0F0F0]  text-black px-6 py-3`}
+        className={` w-full max-w-[500px] h-full flex items-center bg-[#F0F0F0]  text-black px-6 py-3`}
       >
         <form className="w-full">
           <div
             className={`flex flex-col gap-10 p-6 bg-white rounded-lg shadow-lg w-full`}
           >
-            <div className={`text-3xl`}>Login</div>
+            <div className={`text-3xl text-center`}>Login</div>
             <div className={`flex flex-col gap-3`}>
               <div className="flex flex-col gap-2">
                 <label htmlFor={`email`}>Email</label>

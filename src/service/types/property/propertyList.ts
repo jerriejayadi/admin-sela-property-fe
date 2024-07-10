@@ -7,7 +7,7 @@ export interface RequestPropertyListParamsProps {
 export interface ResponsePropertyProps {
   status: boolean;
   statusCode: number;
-  result: IResult;
+  result: IPropertyList[];
 }
 
 export interface IResult {
@@ -16,8 +16,10 @@ export interface IResult {
 }
 
 export interface IPropertyList {
-  name: string;
-  image: string;
+  id: string;
+  title: string;
+  propertyType: string;
+  images: IImages[];
   price: string | number;
   availability: string;
   landSize: string | number;
@@ -26,6 +28,10 @@ export interface IPropertyList {
   published: boolean;
 }
 
+export interface IImages {
+  type: string;
+  url: string;
+}
 
 export interface IMeta {
   totalItems: number;

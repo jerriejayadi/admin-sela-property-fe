@@ -4,8 +4,11 @@ export interface PostPropertyProps {
   title: string;
   propertyType: string;
   price: string;
-  description: string;
-  keyFeature: string;
+  googleDriveUrl:string;
+  descriptionEn: string;
+  keyFeatureEn: string;
+  descriptionId: string;
+  keyFeatureId: string;
   status: boolean;
   published: boolean;
   availability: boolean;

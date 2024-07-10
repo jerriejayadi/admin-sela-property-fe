@@ -7,7 +7,12 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { ArrowDown2, ArrowUp2, HambergerMenu } from "iconsax-react";
 import { useEffect, useRef, useState } from "react";
-import { getInitialFromName, titleFilter, toTitleCase } from "@/utils";
+import {
+  getInitialFromName,
+  titleFilter,
+  toTitleCase,
+  translateRoleUser,
+} from "@/utils";
 import { localStorageMixins } from "@/localStorage.mixins";
 import { IProfile } from "@/service/types/auth";
 
@@ -19,9 +24,10 @@ export default function Sidebar({ children }: SideBarProps) {
   const router = useRouter();
   const path = usePathname();
 
-  const profile: IProfile = JSON.parse(
-    JSON.parse(localStorageMixins.get("profile")!)
-  );
+  const [profile, setProfile] = useState<IProfile>();
+  useEffect(() => {
+    setProfile(JSON.parse(localStorageMixins.get(`profile`)!));
+  }, []);
 
   const level = profile?.role === "admin" ? 2 : 1;
 
@@ -49,6 +55,7 @@ export default function Sidebar({ children }: SideBarProps) {
 
   const handleLogout = () => {
     localStorageMixins.remove("access_token");
+    localStorageMixins.remove("profile");
     router.push("/login");
   };
 
@@ -143,8 +150,10 @@ export default function Sidebar({ children }: SideBarProps) {
               className={` relative flex items-center justify-end gap-2 cursor-pointer`}
             >
               <div className={`font-montserrat text-end hidden md:block`}>
-                <div className={`font-medium text-sm`}>{profile?.username}</div>
-                <div className={`text-xs text-gray-500`}>{profile?.role}</div>
+                <div className={`font-medium text-sm`}>{profile?.name}</div>
+                <div className={`text-xs text-gray-500`}>
+                  {translateRoleUser(profile?.role ?? "")}
+                </div>
               </div>
               {profile?.image ? (
                 <Image
@@ -159,7 +168,7 @@ export default function Sidebar({ children }: SideBarProps) {
                 <div
                   className={`w-11 h-11 rounded-full bg-slate-900 text-white  text-2xl flex items-center justify-center`}
                 >
-                  {getInitialFromName(profile?.username)}
+                  {getInitialFromName(profile?.name ?? "")}
                 </div>
               )}
 
@@ -172,18 +181,6 @@ export default function Sidebar({ children }: SideBarProps) {
                   menu ? "flex" : "hidden"
                 } absolute top-[65px] divide-y-2 flex flex-col bg-white border border-gray-700 border-opacity-20 shadow-lg drop-shadow-lg px-6 py-3 w-60 cursor-default`}
               >
-                <div className={`py-4 flex flex-col gap-2`}>
-                  <div
-                    className={`w-full active:text-primary md:hover:text-primary`}
-                  >
-                    Profile
-                  </div>
-                  <div
-                    className={`w-full active:text-primary md:hover:text-primary`}
-                  >
-                    Settings
-                  </div>
-                </div>
                 <button
                   onClick={handleLogout}
                   className={`w-full text-left active:text-primary md:hover:text-primary py-4`}

@@ -41,7 +41,7 @@ apiClient.interceptors.response.use(
   (error) => {
     // In case of status 401 user will redirect to login page because of token expire
     if (error?.response?.status === 401) {
-      window.location.href = "/login";
+      // window.location.href = "/login";
       localStorageMixins.remove("access_token");
     }
     return Promise.reject(error);

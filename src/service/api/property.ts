@@ -1,4 +1,5 @@
 import apiClient from ".";
+import { PostPropertyProps } from "../types/property/postProperty";
 import { DetailPropertyProps } from "../types/property/propertyDetail";
 import {
   RequestPropertyListParamsProps,
@@ -8,11 +9,15 @@ import {
 export const getPropertyList = (
   params: RequestPropertyListParamsProps
 ): Promise<ResponsePropertyProps> => {
-  return apiClient.get(`/api/property`, {
+  return apiClient.get(`/apis/property`, {
     params: params,
   });
 };
 
 export const getPropertyDetail = (id: string): Promise<DetailPropertyProps> => {
-  return apiClient.get(`/api/property/detail`, { params: { id: id } });
+  return apiClient.get(`/apis/property/${id}`);
+};
+
+export const postProperty = (payload: PostPropertyProps) => {
+  return apiClient.post(`/apis/property`, payload);
 };

@@ -7,8 +7,10 @@ export interface DetailPropertyProps {
 export interface IResult {
   id: string;
   title: string;
-  description: string;
-  keyFeature: string;
+  descriptionId: string;
+  descriptionEn: string;
+  keyFeatureId: string;
+  keyFeatureEn: string;
   price: string;
   status: boolean;
   published: boolean;

@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const nextConfig = {
   reactStrictMode: false,
   env: {
@@ -9,10 +13,6 @@ const nextConfig = {
       {
         source: "/apis/:path*",
         destination: this.env.HOST + ":path*", // Proxy to Backend External
-      },
-      {
-        source: "/api/:path*",
-        destination: this.env.HOST + ":path*", // Proxy to Main path
       },
     ];
   },

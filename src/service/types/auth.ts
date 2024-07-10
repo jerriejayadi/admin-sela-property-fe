@@ -16,7 +16,7 @@ export interface IResult {
 
 export interface IProfile {
   id: string;
-  username: string;
+  name: string;
   email: string;
   role: string;
   image: string;

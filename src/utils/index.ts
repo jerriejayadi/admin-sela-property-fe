@@ -1,3 +1,4 @@
+import { localStorageMixins } from "@/localStorage.mixins";
 import { useState, useRef, useEffect } from "react";
 
 export const currencyFormat = (input: string | number) => {
@@ -79,4 +80,19 @@ export const translateStatusProperty = (status: string) => {
       splittedStatus[i].substring(1).toLowerCase();
   }
   return splittedStatus.join(" ");
+};
+
+export const translateRoleUser = (role: string) => {
+  const splittedStatus = role.split("_");
+
+  for (let i = 0; i < splittedStatus.length; i++) {
+    splittedStatus[i] =
+      splittedStatus[i].charAt(0).toUpperCase() +
+      splittedStatus[i].substring(1).toLowerCase();
+  }
+  return splittedStatus.join(" ");
+};
+
+export const myProfile = () => {
+  return JSON.parse(localStorageMixins.get(`profile`)!);
 };

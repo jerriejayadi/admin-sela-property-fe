@@ -14,6 +14,8 @@ import {
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useState } from "react";
 
+import StackGrid from "react-stack-grid";
+
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import RichTextRender from "@/components/Atoms/RichTextPreview";
@@ -21,6 +23,9 @@ import RichTextRender from "@/components/Atoms/RichTextPreview";
 import { DetailPropertyProps } from "@/service/types/property/propertyDetail";
 import { useRequest } from "ahooks";
 import { getPropertyDetail } from "@/service/api/property";
+import { currencyFormat, myProfile } from "@/utils";
+import { localStorageMixins } from "@/localStorage.mixins";
+import { IProfile } from "@/service/types/auth";
 
 const ImageList = [
   {
@@ -95,10 +100,11 @@ interface DetailPropertyParams {
   };
 }
 export default function PropertyDetail({ params }: DetailPropertyParams) {
+  const profile = myProfile();
   const router = useRouter();
 
   const [seeMorePhotos, setSeeMorePhotos] = useState<boolean>(false);
-  const { data, run } = useRequest(getPropertyDetail);
+  const { data, run, loading } = useRequest(getPropertyDetail);
   // const [data, setData] = useState<DetailPropertyProps>();
   const [selectedImage, setSelectedImage] = useState<string>(
     data?.result?.images[0]?.url!
@@ -125,14 +131,16 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
 
   return (
     <div className={` max-w-[1150px] pb-20`}>
-      {/* Edit */}
-      <div className={`mb-4 w-full flex justify-end`}>
-        <Link
-          className={`py-3 bg-primary rounded-lg px-5 text-white`}
-          href={`/property/edit/${params.id}`}
-        >
-          Edit Data
-        </Link>
+      <div className={`mb-4 w-full flex justify-between`}>
+        <div className={`font-montserrat font-semibold text-3xl`}>Preview</div>
+        {(profile.role === "admin" || profile.role === "listing_agent") && (
+          <Link
+            className={`py-3 bg-primary rounded-lg px-5 text-white`}
+            href={`/property/edit/${params.id}`}
+          >
+            Edit Data
+          </Link>
+        )}
       </div>
       {/* Photo */}
       <div className={`relative`}>
@@ -180,7 +188,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
             <div
               className={`font-montserrat font-bold text-xl md:text-4xl mt-1 md:mt-7`}
             >
-              IDR {data?.result.price}
+              IDR {currencyFormat(data?.result.price ?? 0)}
             </div>
             <div
               className={`font-montserrat font-semibold text-4xl md:text-6xl md:mt-2`}
@@ -201,7 +209,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
             </div>
             <div className={`flex justify-center w-full `}>
               <div className={`flex gap-2 mt-4 justify-center `}>
-                {data?.result.images.map((rows, index) => (
+                {data?.result.images.slice(0, 3).map((rows, index) => (
                   <div
                     onClick={() => {
                       setCurrent(index);
@@ -293,7 +301,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
         </div>
 
         {/* About Us */}
-        {data?.result.description && (
+        {data?.result.descriptionEn && (
           <div className={`my-2 md:my-10`}>
             <div
               className={` md:text-2xl font-montserrat font-semibold text-black`}
@@ -301,12 +309,12 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
               Description
             </div>
             <div className="font-lato font-light text-sm md:text-base mt-3 md:mt-6 text-secondary leading-6">
-              <RichTextRender value={data?.result.description as any} />
+              <RichTextRender value={data?.result.descriptionEn as any} />
             </div>
           </div>
         )}
 
-        {data?.result.keyFeature && (
+        {data?.result.keyFeatureEn && (
           <div className={`my-2 md:my-10`}>
             <div
               className={` md:text-2xl font-montserrat font-semibold text-black`}
@@ -314,7 +322,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
               Key Feature
             </div>
             <div className="font-lato font-light text-sm md:text-base mt-3 md:mt-6 text-secondary leading-6">
-              <RichTextRender value={data?.result.keyFeature as any} />
+              <RichTextRender value={data?.result.keyFeatureEn as any} />
             </div>
           </div>
         )}
@@ -338,8 +346,39 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
           >
             Property Gallery
           </div>
-          <div className={`grid md:grid-cols-2 gap-4 mt-4`}>
-            {data?.result.images.map((rows, index) => (
+          {!loading && (
+            <StackGrid
+              className="mt-4"
+              columnWidth={"50%"}
+              gutterHeight={10}
+              gutterWidth={10}
+              duration={0}
+            >
+              {data?.result.images.map((rows, index) => (
+                <div
+                  key={index}
+                  // onClick={() => {
+                  //   setSelectedImage(rows.url);
+                  // }}
+                >
+                  <Image
+                    className={`object-fill h-fit  ${
+                      selectedImage === rows.url && "border-2 border-orange-300"
+                    }`}
+                    alt={``}
+                    loader={({ src }) => {
+                      return src;
+                    }}
+                    src={rows.url}
+                    width={900}
+                    height={900}
+                  />
+                </div>
+              ))}
+            </StackGrid>
+          )}
+          <div className={`grid  gap-4 mt-4`}>
+            {/* {data?.result.images.map((rows, index) => (
               <div
                 key={index}
                 onClick={() => {
@@ -347,7 +386,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
                 }}
               >
                 <Image
-                  className={`md:w-[622px] md:h-[427px] ${
+                  className={`object-cover md:w-[622px] md:h-[427px] ${
                     selectedImage === rows.url && "border-2 border-orange-300"
                   }`}
                   alt={``}
@@ -359,7 +398,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
                   height={1080}
                 />
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
         {!seeMorePhotos && data?.result.images.length! > 2 && (

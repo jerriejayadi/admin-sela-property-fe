@@ -7,6 +7,7 @@ export const responseSuccess: ResponsePropertyProps = {
     items: [
       {
         name: "Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool",
+        type: "villa",
         price: 4000000000,
         availability: "Available",
         landSize: 300,
@@ -18,6 +19,7 @@ export const responseSuccess: ResponsePropertyProps = {
       },
       {
         name: "Luxury Villa Ubud with Private Pool",
+        type: "villa",
         price: 4000000000,
         availability: "Available",
         landSize: 300,
@@ -29,6 +31,7 @@ export const responseSuccess: ResponsePropertyProps = {
       },
       {
         name: "Luxury Villa Ubud with Private Pool",
+        type: "house",
         price: 4000000000,
         availability: "Available",
         landSize: 300,
@@ -40,6 +43,7 @@ export const responseSuccess: ResponsePropertyProps = {
       },
       {
         name: "Luxury Villa Ubud with Private Pool",
+        type: "bunker",
         price: 4000000000,
         availability: "Available",
         landSize: 300,
