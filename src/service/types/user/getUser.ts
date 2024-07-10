@@ -40,6 +40,7 @@ export interface GetUserDetailProps {
     id: string;
     name: string;
     email: string;
+    password?: string;
     role: string;
     status: string;
   };

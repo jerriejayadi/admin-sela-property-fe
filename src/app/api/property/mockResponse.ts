@@ -6,52 +6,76 @@ export const responseSuccess: ResponsePropertyProps = {
   result: {
     items: [
       {
-        name: "Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool",
-        type: "villa",
+        id: "",
+        title:
+          "Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool",
+        propertyType: "villa",
         price: 4000000000,
         availability: "Available",
         landSize: 300,
         buildSize: 300,
         status: "approved",
         published: false,
-        image:
-          "https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a",
+        images: [
+          {
+            type: "thumbnail",
+            url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
+          },
+        ],
       },
       {
-        name: "Luxury Villa Ubud with Private Pool",
-        type: "villa",
+        id: "",
+        title:
+          "Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool",
+        propertyType: "villa",
         price: 4000000000,
         availability: "Available",
         landSize: 300,
         buildSize: 300,
         status: "approved",
-        published: true,
-        image:
-          "https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a",
-      },
-      {
-        name: "Luxury Villa Ubud with Private Pool",
-        type: "house",
-        price: 4000000000,
-        availability: "Available",
-        landSize: 300,
-        buildSize: 300,
-        status: "in_review",
         published: false,
-        image:
-          "https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a",
+        images: [
+          {
+            type: "thumbnail",
+            url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
+          },
+        ],
       },
       {
-        name: "Luxury Villa Ubud with Private Pool",
-        type: "bunker",
+        id: "",
+        title:
+          "Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool",
+        propertyType: "villa",
         price: 4000000000,
         availability: "Available",
         landSize: 300,
         buildSize: 300,
-        status: "rejected",
-        published: true,
-        image:
-          "https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a",
+        status: "approved",
+        published: false,
+        images: [
+          {
+            type: "thumbnail",
+            url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
+          },
+        ],
+      },
+      {
+        id: "",
+        title:
+          "Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool Luxury Villa Ubud with Private Pool",
+        propertyType: "villa",
+        price: 4000000000,
+        availability: "Available",
+        landSize: 300,
+        buildSize: 300,
+        status: "approved",
+        published: false,
+        images: [
+          {
+            type: "thumbnail",
+            url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
+          },
+        ],
       },
     ],
     meta: {

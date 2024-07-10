@@ -7,7 +7,7 @@ export interface RequestPropertyListParamsProps {
 export interface ResponsePropertyProps {
   status: boolean;
   statusCode: number;
-  result: IPropertyList[];
+  result: IResult;
 }
 
 export interface IResult {

@@ -46,7 +46,7 @@ export default function EditUser({ params }: EditUserParams) {
   const manageInitialValue = () => {
     setInitialValue({
       email: data?.result.email!,
-      password: data?.result.password,
+      password: data?.result.password!,
       name: data?.result.name!,
       role: data?.result.role as ERole,
       status: data?.result.status as EUserStatus,

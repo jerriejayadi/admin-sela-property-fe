@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { DummyProps, dummy } from "./dummy";
 import {
   currencyFormat,
+  myProfile,
   statusColorChip,
   translateStatusProperty,
 } from "@/utils";
@@ -24,7 +25,7 @@ import { localStorageMixins } from "@/localStorage.mixins";
 import { ERole } from "@/service/types/user/postUser";
 
 export default function Property() {
-  const profile: IProfile = JSON.parse(localStorageMixins.get(`profile`)!);
+  const profile = myProfile();
   const router = useRouter();
   const [pagination, setPagination] = useState<number>(1);
 
@@ -43,7 +44,7 @@ export default function Property() {
 
   useEffect(() => {
     runAsync({}).then((res) => {
-      setData(res.result);
+      setData(res.result.items);
     });
   }, []);
   return (

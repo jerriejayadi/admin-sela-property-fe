@@ -67,7 +67,7 @@ export default function EditProperty({ params }: EditPropertyParams) {
         Edit Property
       </div>
       <div>
-        <Forms initialValue={data?.result} fetchLoading={loading} />
+        <Forms onSubmit={(res)=>{console.log(res)}} initialValue={data?.result} fetchLoading={loading} />
       </div>
     </div>
   );

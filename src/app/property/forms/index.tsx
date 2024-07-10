@@ -2,7 +2,7 @@ import Button from "@/components/Atoms/Button";
 import TipTap from "@/components/Atoms/TipTap";
 import UploadFile from "@/components/Atoms/UploadFile";
 import UploadImage from "@/components/Atoms/UploadImage";
-import { currencyFormat } from "@/utils";
+import { currencyFormat, myProfile } from "@/utils";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { uploadFile, getFile, deleteFile } from "@/firebase/uploadFile";
 import { localStorageMixins } from "@/localStorage.mixins";
 import Input from "@/components/Atoms/Input";
 import { PostPropertyProps } from "@/service/types/property/postProperty";
-import { IDetailPropertyImage } from "@/service/types/property/propertyDetail";
+import { IDetailPropertyImage, IResult } from "@/service/types/property/propertyDetail";
 import Image from "next/image";
 
 interface IImage extends IDetailPropertyImage {
@@ -18,7 +18,7 @@ interface IImage extends IDetailPropertyImage {
 }
 
 interface FormsProps {
-  initialValue?: PostPropertyProps;
+  initialValue?: PostPropertyProps | IResult;
   fetchLoading?: boolean;
   submitLoading?: boolean;
   onSubmit: (_args: PostPropertyProps) => void;
@@ -83,7 +83,7 @@ export default function Forms({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const profile = JSON.parse(localStorageMixins.get(`profile`)!);
+  const profile = myProfile();
 
   const handleBannerFiles = async (
     files: string[],
@@ -114,7 +114,7 @@ export default function Forms({
 
   useEffect(() => {
     if (initialValue) {
-      setInitialValues(initialValue);
+      setInitialValues(initialValue as PostPropertyProps);
       let imagesTemp = initialValue?.images?.map((rows) => ({
         ...rows,
         file: "",

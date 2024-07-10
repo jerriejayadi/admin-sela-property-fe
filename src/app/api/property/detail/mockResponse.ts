@@ -7,8 +7,11 @@ export const responseSuccess: DetailPropertyProps = {
     title: "Villa Luxury Ubud Sangat Indah dan Nyaman Sekali WOWWW",
     propertyType: "villa",
     price: "140,000,000,000",
-    description: "<p>This is the description of the product</p>",
-    keyFeature:
+    descriptionId: "<p>This is the description of the product</p>",
+    keyFeatureId:
+      "<p>Keyfeature of the product is very wow wow i like it so much hahahahahahaah</p>",
+    descriptionEn: "<p>This is the description of the product</p>",
+    keyFeatureEn:
       "<p>Keyfeature of the product is very wow wow i like it so much hahahahahahaah</p>",
     status: false,
     published: true,
