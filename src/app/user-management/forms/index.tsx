@@ -139,9 +139,9 @@ export default function UserForms({
               <option value={``} selected hidden>
                 Select Role
               </option>
-              <option value={"admin"}>Admin</option>
-              <option value={"listing_agent"}>Agen Listing</option>
-              <option value={"selling_agent"}>Agen Selling</option>
+              <option value={ERole.ADMIN}>Admin</option>
+              <option value={ERole.LISTING_AGENT}>Agen Listing</option>
+              <option value={ERole.SELLING_AGENT}>Agen Selling</option>
             </select>
             {formik.errors.role && (
               <div className={`text-red-500 text-sm`}>{formik.errors.role}</div>

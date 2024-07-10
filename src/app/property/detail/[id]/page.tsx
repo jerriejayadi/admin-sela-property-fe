@@ -117,7 +117,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
   };
 
   const nextSlide = () => {
-    if (current === data?.result.images.length! - 1) setCurrent(0);
+    if (current === 2) setCurrent(0);
     else setCurrent(current + 1);
   };
 
@@ -284,7 +284,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
             className={`md:pl-12`}
             props={"Bedroom"}
             iconURL={"/icons/bedroom.png"}
-            value={3 ?? 0}
+            value={data?.result.bedRoomsAmount ?? 0}
           />
           <PropertyDetailCard
             className={`md:pl-12`}
