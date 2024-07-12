@@ -21,7 +21,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Chip from "@/components/Atoms/Chip";
 import { useRequest } from "ahooks";
-import { getPropertyList } from "@/service/api/property";
+import {
+  getPropertyList,
+  putPropertyApproval,
+  putPublished,
+} from "@/service/api/property";
 import {
   IPropertyList,
   ResponsePropertyProps,
@@ -33,34 +37,58 @@ import { localStorageMixins } from "@/localStorage.mixins";
 import { ERole } from "@/service/types/user/postUser";
 import { EStatusProperty } from "@/service/types/property/postProperty";
 import { GetUserParams } from "@/service/types/user/getUser";
+import ActionModals from "@/components/Atoms/Modals/ActionModals";
+import FeedbackModals from "@/components/Atoms/Modals/FeedbackModals";
 
 export default function Property() {
   const profile = myProfile();
   const router = useRouter();
+
   const [pagination, setPagination] = useState<number>(1);
-
   const [data, setData] = useState<any>();
+  const [selected, setSelected] = useState<string>();
+  const [modalApprove, setModalApprove] = useState<boolean>(false);
+  const [modalReject, setModalReject] = useState<boolean>(false);
 
-  const { data: resProperty, runAsync, loading } = useRequest(getPropertyList);
+  const {
+    data: resProperty,
+    runAsync: fetchList,
+    loading,
+  } = useRequest(getPropertyList);
 
-  const handlePublishedStatus = (
-    e: ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    const temp = [...data!];
-    temp[index].published = e.target.checked;
-    setData(temp);
+  const { runAsync: updatePublished, loading: updatePublishedLoading } =
+    useRequest(putPublished, { manual: true });
+
+  const handlePublishedStatus = (id: string, status: boolean) => {
+    updatePublished(id, { published: !status }).then(() => {
+      fetchList({}).then((res) => setData(res.result.items));
+    });
   };
 
-  useEffect(() => {
-    runAsync({}).then((res) => {
-      setData(res.result);
-    });
-  }, []);
+  const { runAsync: putApproval, loading: approvalLoading } = useRequest(
+    putPropertyApproval,
+    {
+      manual: true,
+    }
+  );
 
-  useEffect(() => {
-    console.log(profile);
-  }, [profile]);
+  const handleApprove = () => {
+    setModalApprove(false);
+    putApproval(selected!, { status: "approved", note: "-" }).then(() => {
+      fetchList({}).then((res) => {
+        setData(res.result.items);
+      });
+    });
+  };
+
+  const handleReject = () => {
+    setModalReject(false);
+    putApproval(selected!, { status: "rejected", note: "-" }).then(() => {
+      fetchList({}).then((res) => {
+        setData(res.result.items);
+      });
+    });
+  };
 
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState<GetUserParams>({
@@ -79,6 +107,7 @@ export default function Property() {
       setPage(page);
     }
   };
+
   const handleNext = () => {
     if (filter.page! >= 100!) {
       setFilter((prev) => ({ ...prev, page: page }));
@@ -88,6 +117,12 @@ export default function Property() {
       setPage(page + 1);
     }
   };
+
+  useEffect(() => {
+    fetchList(filter).then((res) => {
+      setData(res.result.items);
+    });
+  }, [filter]);
   return (
     <div className={`text-black flex flex-col gap-6 pb-20`}>
       {/* Table */}
@@ -104,6 +139,11 @@ export default function Property() {
             <div></div>
             {/* Search Field */}
             <input
+              onKeyDown={(e: any) => {
+                if (e.key === "Enter") {
+                  setFilter((prev) => ({ ...prev, keyword: e.target.value }));
+                }
+              }}
               className={`w-full md:max-w-[300px] px-3 py-2 border rounded-lg border-opacity-20 border-black focus:outline-none focus:border-primary  focus:shadow-sm transition-colors duration-150 active:outline-none`}
               placeholder={`Search `}
               type="text"
@@ -111,14 +151,30 @@ export default function Property() {
 
             {/* Filter */}
             <select
+              onChange={(e) => {
+                setFilter((prev) => ({
+                  ...prev,
+                  propertyType: e.target.value,
+                }));
+              }}
               className={` px-3 py-2 border rounded-lg border-opacity-20 border-black focus:outline-none focus:border-primary focus:shadow-sm transition-colors duration-150 active:outline-none`}
             >
-              <option>Filter</option>
+              <option value={``}>All</option>
+              <option value={`villa`}>Villa</option>
+              <option value={`house`}>House</option>
             </select>
             <select
+              onChange={(e) => {
+                setFilter((prev) => ({
+                  ...prev,
+                  availability: e.target.value,
+                }));
+              }}
               className={`px-3 py-2 border rounded-lg border-opacity-20 border-black focus:outline-none focus:border-primary focus:shadow-sm transition-colors duration-150 active:outline-none`}
             >
-              <option>Filter</option>
+              <option value={``}>All</option>
+              <option value={'true'}>Available</option>
+              <option value={'false'}>Sold/Rented</option>
             </select>
           </div>
 
@@ -154,7 +210,7 @@ export default function Property() {
                 <td className={`w-[200px] px-3 py-2 `}>Price</td>
                 <td className={`w-[100px] px-3 py-2 `}>Availability</td>
                 <td className={`w-[100px] px-3 py-2 `}>Status</td>
-                <td className={`w-[150px] pl-3 pr-8 py-2  rounded-tr-xl`}>
+                <td className={`w-[100px] pl-3 pr-8 py-2  rounded-tr-xl`}>
                   Published
                 </td>
                 <td className={`w-[100px] pl-3 pr-8 py-2  rounded-tr-xl`}>
@@ -201,16 +257,22 @@ export default function Property() {
                     {profile?.roles.some(
                       (rows: string) => rows === ERole.ADMIN
                     ) ? (
-                      <label className="inline-flex items-center cursor-pointer">
+                      <label
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        className="inline-flex items-center cursor-pointer"
+                      >
                         <input
-                          onChange={(e) => {
-                            handlePublishedStatus(e, index);
+                          onChange={() => {
+                            handlePublishedStatus(rows.id, rows.published);
                           }}
                           type="checkbox"
                           checked={rows.published}
                           className="sr-only peer"
+                          disabled={rows.status !== EStatusProperty.APPROVED}
                         />
-                        <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary "></div>
+                        <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-disabled:bg-gray-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary peer-disabled:cursor-default "></div>
                       </label>
                     ) : (
                       <Chip color={rows.published ? "success" : "disabled"}>
@@ -249,7 +311,8 @@ export default function Property() {
                       (rows: string) =>
                         rows === ERole.LISTING_AGENT || rows === ERole.ADMIN
                     ) &&
-                      rows.status !== EStatusProperty.DRAFT && (
+                      (rows.status === EStatusProperty.APPROVED ||
+                        rows.status === EStatusProperty.DRAFT) && (
                         <>
                           <button
                             onClick={(e) => {
@@ -303,13 +366,14 @@ export default function Property() {
                     {profile?.roles.some(
                       (rows: string) => rows === ERole.ADMIN
                     ) &&
-                      rows.status === EStatusProperty.DRAFT && (
+                      rows.status === EStatusProperty.IN_REVIEW && (
                         <>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               e.preventDefault();
-                              router.push(`/property/edit/${rows.id}`);
+                              setSelected(rows.id);
+                              setModalApprove(true);
                             }}
                             className={`flex items-center gap-2 mt-2 hover:text-primary`}
                           >
@@ -317,8 +381,11 @@ export default function Property() {
                             <div>Approve</div>
                           </button>
                           <button
-                            onClick={() => {
-                              router.push(`/property/edit/${rows.id}`);
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setSelected(rows.id);
+                              setModalReject(true);
                             }}
                             className={`flex items-center gap-2 mt-2 hover:text-primary`}
                           >
@@ -387,6 +454,45 @@ export default function Property() {
           </button>
         </div>
       </div>
+
+      <ActionModals
+        title={"Approve this Property?"}
+        onReject={function (): void {
+          setModalApprove(false);
+        }}
+        onSubmit={function (): void {
+          handleApprove();
+        }}
+        rejectButtonText="Cancel"
+        open={modalApprove}
+        onClose={function (): void {
+          setModalApprove(false);
+        }}
+      >
+        Before approving this property request, please review the details
+        carefully. Once approved, the requester will be notified, and the
+        property will be added to our system.
+      </ActionModals>
+      <ActionModals
+        title={"Reject this Property?"}
+        onReject={function (): void {
+          setModalApprove(false);
+        }}
+        onSubmit={function (): void {
+          handleReject();
+        }}
+        rejectButtonText="Cancel"
+        open={modalReject}
+        onClose={function (): void {
+          setModalReject(false);
+        }}
+        approveButtonText="Reject"
+      >
+        Before rejecting this property request, please review the details
+        carefully. Once rejected, the requester will be notified, and the
+        property will be added to our system.
+      </ActionModals>
+
       {/* <Alert className={`fixed top-0 z-50 !max-w-[450px] `} /> */}
     </div>
   );

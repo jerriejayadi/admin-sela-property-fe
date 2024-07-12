@@ -25,7 +25,7 @@ export default function ModalsFrame({
         }}
         className={`${
           open ? "opacity-100  " : "opacity-0 "
-        }   bg-white rounded-md flex flex-col items-center justify-center p-20 gap-8 md:min-w-[650px]`}
+        }   bg-white rounded-md flex flex-col items-center justify-center p-20 gap-8 md:min-w-[650px] md:max-w-[850px]`}
       >
         {children}
       </div>

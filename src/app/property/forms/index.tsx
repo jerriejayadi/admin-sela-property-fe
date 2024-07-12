@@ -152,17 +152,10 @@ export default function Forms({
     setBannerImage(listImages);
   };
 
-  const handleSubmit = (values: PostPropertyProps) => {
-    setModalSubmit(false);
-    setLoading(true);
-    const mergedValues = { ...values, image: image };
-    console.log(mergedValues);
-    // setTimeout(() => {
-    //   localStorageMixins.set("submitted_property", JSON.stringify(values));
-    //   setLoading(false);
-    //   setModalSuccess(true);
-    // }, 3000);
-  };
+  const handleSubmitData = (
+    values: PostPropertyProps,
+    method: "submit" | "save"
+  ) => {};
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
@@ -725,20 +718,19 @@ export default function Forms({
           className={`w-full flex flex-col md:flex-row items-center justify-end mt-10 gap-5 pb-20 md:pb-0`}
         >
           <Button
-            type="button"
-            isLoading={submitLoading}
+            type="submit"
             onClick={() => {
-              setModalDiscard(true);
+              formik.setFieldValue("status", EStatusProperty.DRAFT);
             }}
             className={`border-2 border-red-500 bg-transparent !text-red-500 md:max-w-32`}
           >
-            Discard
+            Save as Draft
           </Button>
           <Button
             type={"submit"}
             isLoading={submitLoading}
             onClick={() => {
-              setModalSubmit(true);
+              formik.setFieldValue("status", EStatusProperty.IN_REVIEW);
             }}
             disabled={!formik.isValid || image.length === 0}
             className={`md:max-w-32`}

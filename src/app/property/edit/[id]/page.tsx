@@ -20,6 +20,7 @@ import {
 } from "@tiptap/react";
 import {
   Add,
+  ChartFail,
   ChartSuccess,
   CloseCircle,
   DocumentUpload,
@@ -32,7 +33,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import Forms from "../../forms";
 import { PostPropertyProps } from "@/service/types/property/postProperty";
 import { useRequest } from "ahooks";
-import { getPropertyDetail } from "@/service/api/property";
+import { getPropertyDetail, putPropertyDetail } from "@/service/api/property";
 import { IResult } from "@/service/types/property/propertyDetail";
 
 interface IDescription {
@@ -56,11 +57,29 @@ export default function EditProperty({ params }: EditPropertyParams) {
   const router = useRouter();
   const path = usePathname();
 
+  const [modalSubmit, setModalSubmit] = useState<boolean>(false);
+  const [modalDiscard, setModalDiscard] = useState<boolean>(false);
+  const [modalSuccess, setModalSuccess] = useState<boolean>(false);
+  const [modalFailed, setModalFailed] = useState<boolean>(false);
+  const [submittedData, setSubmittedData] = useState<PostPropertyProps>();
+
   const { data, run, loading } = useRequest(getPropertyDetail);
+  const { runAsync: editProperty, error } = useRequest(putPropertyDetail);
 
   const [managedInitialValue, setManagedInitialValue] = useState<
     PostPropertyProps | IResult
   >();
+
+  const handleSubmit = () => {
+    setModalSubmit(false);
+    editProperty(params.id, submittedData!)
+      .then(() => {
+        setModalSuccess(true);
+      })
+      .catch((err) => {
+        setModalFailed(true);
+      });
+  };
 
   useLayoutEffect(() => {
     run(params.id);
@@ -92,12 +111,58 @@ export default function EditProperty({ params }: EditPropertyParams) {
       <div>
         <Forms
           onSubmit={(res) => {
-            console.log(res);
+            setModalSubmit(true);
+            setSubmittedData(res);
           }}
           initialValue={managedInitialValue}
           fetchLoading={loading}
         />
       </div>
+      <ActionModals
+        icons={<Warning2 className={`size-20`} />}
+        open={modalSubmit}
+        title={"Are you sure?"}
+        onReject={function (): void {
+          setModalSubmit(false);
+        }}
+        onSubmit={function (): void {
+          handleSubmit();
+        }}
+        onClose={function (): void {
+          setModalSubmit(false);
+        }}
+      >
+        Make sure to confirm all of the data you entered before submitting.
+      </ActionModals>
+      <FeedbackModals
+        icons={<ChartSuccess className={`size-20`} />}
+        title={"Data submitted successfully"}
+        open={modalSuccess}
+        onClose={function (): void {
+          setModalSuccess(false);
+        }}
+        actionText="Return to homepage"
+        onAction={() => {
+          router.push(`/property`);
+        }}
+      >
+        Property has been submitted successfully.
+      </FeedbackModals>
+
+      <FeedbackModals
+        icons={<ChartFail className={`size-20`} />}
+        title={"Failed to submit data"}
+        open={modalFailed}
+        onClose={function (): void {
+          setModalFailed(false);
+        }}
+        actionText="Try Again"
+        onAction={() => {
+          setModalFailed(false);
+        }}
+      >
+        {error?.message}
+      </FeedbackModals>
     </div>
   );
 }
