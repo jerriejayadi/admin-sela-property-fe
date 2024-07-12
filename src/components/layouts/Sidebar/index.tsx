@@ -29,7 +29,7 @@ export default function Sidebar({ children }: SideBarProps) {
   const [level, setLevel] = useState<number>(1);
   useEffect(() => {
     const profile = myProfile();
-    setLevel(profile?.role! === "ADMIN" ? 2 : 1);
+    setLevel(profile?.roles.some((rows) => rows.includes("ADMIN")) ? 2 : 1);
     setProfile(profile);
   }, []);
 

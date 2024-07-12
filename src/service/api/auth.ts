@@ -1,5 +1,5 @@
 import apiClient from ".";
-import { RequestLoginProps, ResponseLoginProps } from "../types/auth";
+import { IResult, RequestLoginProps, ResponseLoginProps } from "../types/auth";
 import {
   GetUserDetailProps,
   GetUserParams,
@@ -9,7 +9,7 @@ import { PostUserProps, PostUserResponseProps } from "../types/user/postUser";
 
 export const postLogin = (
   request: RequestLoginProps
-): Promise<ResponseLoginProps> => {
+): Promise<IResult> => {
   return apiClient.post(`/apis/admin/login`, request);
 };
 
