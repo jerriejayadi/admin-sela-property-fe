@@ -1,3 +1,5 @@
+import { EStatusProperty } from "./postProperty";
+
 export interface DetailPropertyProps {
   status: boolean;
   statusCode: number;
@@ -12,7 +14,7 @@ export interface IResult {
   keyFeatureId: string;
   keyFeatureEn: string;
   price: string;
-  status: boolean;
+  status: EStatusProperty;
   published: boolean;
   tag: string;
   availability: boolean;
@@ -31,6 +33,7 @@ export interface IResult {
   furnished: boolean;
   address: IAddress;
   images: IDetailPropertyImage[];
+  googleDriveUrl: string;
 }
 
 export interface IDetailPropertyImage {

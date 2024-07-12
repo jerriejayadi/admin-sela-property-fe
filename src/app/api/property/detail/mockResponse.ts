@@ -1,3 +1,4 @@
+import { EStatusProperty } from "@/service/types/property/postProperty";
 import { DetailPropertyProps } from "@/service/types/property/propertyDetail";
 
 export const responseSuccess: DetailPropertyProps = {
@@ -13,7 +14,8 @@ export const responseSuccess: DetailPropertyProps = {
     descriptionEn: "<p>This is the description of the product</p>",
     keyFeatureEn:
       "<p>Keyfeature of the product is very wow wow i like it so much hahahahahahaah</p>",
-    status: false,
+    status: EStatusProperty.APPROVED,
+    googleDriveUrl:'',
     published: true,
     availability: true,
     landSize: "300",

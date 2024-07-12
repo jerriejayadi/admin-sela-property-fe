@@ -33,6 +33,7 @@ import Forms from "../../forms";
 import { PostPropertyProps } from "@/service/types/property/postProperty";
 import { useRequest } from "ahooks";
 import { getPropertyDetail } from "@/service/api/property";
+import { IResult } from "@/service/types/property/propertyDetail";
 
 interface IDescription {
   title: string;
@@ -57,9 +58,31 @@ export default function EditProperty({ params }: EditPropertyParams) {
 
   const { data, run, loading } = useRequest(getPropertyDetail);
 
+  const [managedInitialValue, setManagedInitialValue] = useState<
+    PostPropertyProps | IResult
+  >();
+
   useLayoutEffect(() => {
     run(params.id);
   }, []);
+
+  const manageInitialValue = () => {
+    let temp = {
+      ...data?.result,
+      bathRoomsAmount: data?.result.bathRoomsAmount.toString(),
+      bedRoomsAmount: data?.result.bedRoomsAmount.toString(),
+      carParkAmount: data?.result.carParkAmount.toString(),
+      price: currencyFormat(data?.result.price ?? 0),
+      googleDriveUrl: data?.result.googleDriveUrl,
+    };
+    setManagedInitialValue(temp as any);
+  };
+
+  useEffect(() => {
+    if (data?.result) {
+      manageInitialValue();
+    }
+  }, [data]);
 
   return (
     <div className={``}>
@@ -67,7 +90,13 @@ export default function EditProperty({ params }: EditPropertyParams) {
         Edit Property
       </div>
       <div>
-        <Forms onSubmit={(res)=>{console.log(res)}} initialValue={data?.result} fetchLoading={loading} />
+        <Forms
+          onSubmit={(res) => {
+            console.log(res);
+          }}
+          initialValue={managedInitialValue}
+          fetchLoading={loading}
+        />
       </div>
     </div>
   );

@@ -30,7 +30,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import Forms from "../forms";
-import { PostPropertyProps } from "@/service/types/property/postProperty";
+import {
+  EStatusProperty,
+  PostPropertyProps,
+} from "@/service/types/property/postProperty";
 import { useRequest } from "ahooks";
 import { postProperty } from "@/service/api/property";
 
@@ -52,7 +55,7 @@ export default function CreateProperty() {
     descriptionEn: "",
     keyFeatureId: "",
     keyFeatureEn: "",
-    status: false,
+    status: EStatusProperty.DRAFT,
     published: false,
     availability: false,
     landSize: "",
@@ -81,6 +84,7 @@ export default function CreateProperty() {
   const { runAsync, loading } = useRequest(postProperty, { manual: true });
   const handleSubmit = () => {
     setModalSubmit(false);
+    // console.log(submittedData!);
 
     runAsync(submittedData!)
       .then(() => {

@@ -23,9 +23,16 @@ import RichTextRender from "@/components/Atoms/RichTextPreview";
 import { DetailPropertyProps } from "@/service/types/property/propertyDetail";
 import { useRequest } from "ahooks";
 import { getPropertyDetail } from "@/service/api/property";
-import { currencyFormat, myProfile } from "@/utils";
+import {
+  currencyFormat,
+  myProfile,
+  statusPropertyColor,
+  toTitleCase,
+} from "@/utils";
 import { localStorageMixins } from "@/localStorage.mixins";
 import { IProfile } from "@/service/types/auth";
+import Button from "@/components/Atoms/Button";
+import Chip from "@/components/Atoms/Chip";
 
 const ImageList = [
   {
@@ -131,6 +138,40 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
 
   return (
     <div className={` max-w-[1150px] pb-20`}>
+      <div className={`mb-4`}>
+        <div className={` mb-3 flex items-center`}>
+          <div className={`font-montserrat font-semibold text-3xl`}>
+            {data?.result.title}
+          </div>
+          <div className={`ml-4`}>
+            <Chip color={statusPropertyColor(data?.result.status!)}>
+              {toTitleCase(data?.result.status as string)}
+            </Chip>
+          </div>
+        </div>
+        <div className={`bg-white rounded-lg px-8 py-5`}>
+          <Button
+            className={`!w-fit rounded-lg !px-5 mr-5`}
+            onClick={() => {
+              window.navigator.clipboard.writeText(
+                data?.result.googleDriveUrl!
+              );
+            }}
+          >
+            Google Drive URL
+          </Button>
+          <Button
+            className={`!w-fit rounded-lg !px-5`}
+            onClick={() => {
+              window.navigator.clipboard.writeText(
+                data?.result.address.locationMaps!
+              );
+            }}
+          >
+            Location URL
+          </Button>
+        </div>
+      </div>
       <div className={`mb-4 w-full flex justify-between`}>
         <div className={`font-montserrat font-semibold text-3xl`}>Preview</div>
         {(profile?.role! === "ADMIN" || profile?.role! === "listing_agent") && (

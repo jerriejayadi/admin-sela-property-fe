@@ -30,7 +30,7 @@ export default function UserForms({
     email: "",
     password: "",
     name: "",
-    role: "",
+    roles: [],
     status: EUserStatus.active,
   });
 
@@ -43,7 +43,7 @@ export default function UserForms({
     name: yup.string().required("Name is required"),
     password: yup.string().required("Password is required"),
     email: yup.string().required("email is required"),
-    role: yup.string().required("Role must be filled"),
+    roles: yup.array().min(1),
     status: yup.string().required("Status must be filled"),
 
     // Add more validation rules for other fields as needed
@@ -61,6 +61,8 @@ export default function UserForms({
     validateOnBlur: true,
     enableReinitialize: true,
   });
+
+  const handleSelect = () => {};
 
   useEffect(() => {
     setInitialValues(initialValue ?? initialValues);
@@ -127,7 +129,7 @@ export default function UserForms({
             />
           </div>
 
-          <div className={`text-sm`}>
+          {/* <div className={`text-sm`}>
             <div className="font-montserrat body1 mb-3 body2">Role</div>
             <select
               disabled={isLoading}
@@ -139,12 +141,47 @@ export default function UserForms({
               <option value={``} selected hidden>
                 Select Role
               </option>
-              <option value={ERole.ADMIN}>Admin</option>
               <option value={ERole.LISTING_AGENT}>Agen Listing</option>
               <option value={ERole.SELLING_AGENT}>Agen Selling</option>
             </select>
             {formik.errors.role && (
               <div className={`text-red-500 text-sm`}>{formik.errors.role}</div>
+            )}
+          </div> */}
+          <div className={`flex gap-3`}>
+            <label
+              htmlFor={`roles-listing`}
+              className={`flex items-center gap-2`}
+            >
+              <input
+                checked={formik.values.roles?.includes(ERole.LISTING_AGENT)}
+                onChange={formik.handleChange}
+                name={`roles`}
+                value={ERole.LISTING_AGENT}
+                id={`roles-listing`}
+                className={`accent-primary w-5 h-5`}
+                type={`checkbox`}
+              />{" "}
+              Listing
+            </label>
+
+            <label className={`flex items-center gap-2`}>
+              <input
+                onChange={formik.handleChange}
+                name={`roles`}
+                value={ERole.SELLING_AGENT}
+                id={`roles-listing`}
+                className={`accent-primary w-5 h-5`}
+                type={`checkbox`}
+              />{" "}
+              Selling
+            </label>
+          </div>
+          <div>
+            {formik.errors.roles && (
+              <div className={`text-red-500 text-sm`}>
+                {formik.errors.roles}
+              </div>
             )}
           </div>
           <div className={`font-montserrat`}>

@@ -156,7 +156,7 @@ export default function Sidebar({ children }: SideBarProps) {
               <div className={`font-montserrat text-end hidden md:block`}>
                 <div className={`font-medium text-sm`}>{profile?.name}</div>
                 <div className={`text-xs text-gray-500`}>
-                  {translateRoleUser(profile?.role! ?? "")}
+                  {translateRoleUser(profile?.roles ?? [])}
                 </div>
               </div>
               {profile?.image ? (

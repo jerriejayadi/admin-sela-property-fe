@@ -1,12 +1,20 @@
 "use client";
 
-import { Add, ArrowLeft2, ArrowRight2, Check } from "iconsax-react";
+import {
+  Add,
+  ArrowLeft2,
+  ArrowRight2,
+  Check,
+  CloseCircle,
+  TickCircle,
+} from "iconsax-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { DummyProps, dummy } from "./dummy";
 import {
   currencyFormat,
   myProfile,
   statusColorChip,
+  translateAvailabilityProperty,
   translateStatusProperty,
 } from "@/utils";
 import Link from "next/link";
@@ -23,6 +31,8 @@ import Alert from "@/components/Atoms/Alert";
 import { IProfile } from "@/service/types/auth";
 import { localStorageMixins } from "@/localStorage.mixins";
 import { ERole } from "@/service/types/user/postUser";
+import { EStatusProperty } from "@/service/types/property/postProperty";
+import { GetUserParams } from "@/service/types/user/getUser";
 
 export default function Property() {
   const profile = myProfile();
@@ -51,6 +61,33 @@ export default function Property() {
   useEffect(() => {
     console.log(profile);
   }, [profile]);
+
+  const [page, setPage] = useState<number>(1);
+  const [filter, setFilter] = useState<GetUserParams>({
+    keyword: "",
+    role: "",
+    limit: 10,
+    page: 1,
+  });
+
+  const handlePrevious = () => {
+    if (filter.page! < 0) {
+      setFilter((prev) => ({ ...prev, page: 0 }));
+      setPage(page - 1);
+    } else {
+      setFilter((prev) => ({ ...prev, page: page - 1 }));
+      setPage(page);
+    }
+  };
+  const handleNext = () => {
+    if (filter.page! >= 100!) {
+      setFilter((prev) => ({ ...prev, page: page }));
+      setPage(page);
+    } else {
+      setFilter((prev) => ({ ...prev, page: page + 1 }));
+      setPage(page + 1);
+    }
+  };
   return (
     <div className={`text-black flex flex-col gap-6 pb-20`}>
       {/* Table */}
@@ -86,7 +123,10 @@ export default function Property() {
           </div>
 
           {/* Button Property */}
-          {(profile?.role === "ADMIN" || profile?.role === "listing_agent") && (
+          {profile?.roles.some(
+            (rows: string) =>
+              rows === ERole.LISTING_AGENT || rows === ERole.ADMIN
+          ) && (
             <Link
               href={`/property/create`}
               className={`w-full md:max-w-[250px] flex grow-0 body2 items-center justify-center bg-primary hover:bg-orange-700 active:bg-orange-700 text-white rounded-lg px-3 gap-2 py-2`}
@@ -149,14 +189,18 @@ export default function Property() {
                   <td className={`px-3 py-2  truncate`}>
                     Rp{currencyFormat(rows.price)}
                   </td>
-                  <td className={`px-3 py-2  `}>{rows.availability}</td>
+                  <td className={`px-3 py-2  `}>
+                    {translateAvailabilityProperty(rows)}
+                  </td>
                   <td className={`px-3 py-2 `}>
                     <Chip color={statusColorChip(rows.status)}>
                       {translateStatusProperty(rows.status)}
                     </Chip>
                   </td>
                   <td className={`pl-3 pr-8 py-2 `}>
-                    {profile?.role === ERole.ADMIN ? (
+                    {profile?.roles.some(
+                      (rows: string) => rows === ERole.ADMIN
+                    ) ? (
                       <label className="inline-flex items-center cursor-pointer">
                         <input
                           onChange={(e) => {
@@ -178,7 +222,9 @@ export default function Property() {
                   </td>
                   <td className={` pl-3 `}>
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
                         router.push(`/property/detail/${rows.id}`);
                       }}
                       className={`flex items-center gap-2 hover:text-primary`}
@@ -199,55 +245,89 @@ export default function Property() {
                       </svg>
                       <div>Detail</div>
                     </button>
-                    {profile?.role! === "ADMIN" && (
-                      <>
-                        <button
-                          onClick={() => {
-                            router.push(`/property/edit/${rows.id}`);
-                          }}
-                          className={`flex items-center gap-2 mt-2 hover:text-primary`}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="size-6"
+                    {profile?.roles.some(
+                      (rows: string) =>
+                        rows === ERole.LISTING_AGENT || rows === ERole.ADMIN
+                    ) &&
+                      rows.status !== EStatusProperty.DRAFT && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              router.push(`/property/edit/${rows.id}`);
+                            }}
+                            className={`flex items-center gap-2 mt-2 hover:text-primary`}
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                            />
-                          </svg>
-                          <div>Edit</div>
-                        </button>
-                        <button
-                          onClick={() => {
-                            router.push(`/property/edit/${rows.id}`);
-                          }}
-                          className={`flex items-center gap-2 mt-2 hover:text-primary`}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="size-6"
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-6"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                              />
+                            </svg>
+                            <div>Edit</div>
+                          </button>
+                          <button
+                            onClick={() => {
+                              router.push(`/property/edit/${rows.id}`);
+                            }}
+                            className={`flex items-center gap-2 mt-2 hover:text-primary`}
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                            />
-                          </svg>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-6"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                              />
+                            </svg>
 
-                          <div>Delete</div>
-                        </button>
-                      </>
-                    )}
+                            <div>Delete</div>
+                          </button>
+                        </>
+                      )}
+                    {profile?.roles.some(
+                      (rows: string) => rows === ERole.ADMIN
+                    ) &&
+                      rows.status === EStatusProperty.DRAFT && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              router.push(`/property/edit/${rows.id}`);
+                            }}
+                            className={`flex items-center gap-2 mt-2 hover:text-primary`}
+                          >
+                            <TickCircle className="size-6" />
+                            <div>Approve</div>
+                          </button>
+                          <button
+                            onClick={() => {
+                              router.push(`/property/edit/${rows.id}`);
+                            }}
+                            className={`flex items-center gap-2 mt-2 hover:text-primary`}
+                          >
+                            <CloseCircle className="size-6" />
+
+                            <div>Reject</div>
+                          </button>
+                        </>
+                      )}
                   </td>
                 </tr>
               ))}
@@ -255,46 +335,56 @@ export default function Property() {
           </table>
         </div>
         <div
-          className={`px-8 pb-4 flex flex-col sm:flex-row items-center justify-between`}
+          className={`flex items-center justify-center md:justify-end gap-3 px-5 pb-5`}
         >
-          <div className={`flex items-center`}>
-            <button
-              className={`disabled:text-gray-300 mr-2`}
-              disabled={pagination === 1}
-              onClick={() => {
-                setPagination(pagination - 1);
+          {/* Button Previous */}
+
+          <button
+            onClick={() => {
+              handlePrevious();
+            }}
+            className={`disabled:text-gray-200`}
+            disabled={filter.page === 1}
+          >
+            <ArrowLeft2 />
+          </button>
+
+          {/* Pagination */}
+
+          <div className={`flex items-center gap-3`}>
+            <p>Page</p>
+            <input
+              type={`number`}
+              value={page}
+              onKeyDown={(e: any) =>
+                setFilter((prev) => ({ ...prev, page: e.target.value }))
+              }
+              onBlur={(e) => {
+                setFilter((prev) => ({
+                  ...prev,
+                  page: Number(e.target.value),
+                }));
               }}
-            >
-              <ArrowLeft2 className={`w-4 h-4 `} />
-            </button>
-            <div className={`flex items-center gap-1`}>
-              {[1, 2, 3].map((rows, index) => (
-                <button
-                  key={index}
-                  className={`px-3 py-2 ${
-                    rows === pagination ? "bg-primary text-white" : "text-black"
-                  }  rounded-lg`}
-                  onClick={() => {
-                    setPagination(rows);
-                  }}
-                >
-                  {rows}
-                </button>
-              ))}
-            </div>
-            <button
-              className={`disabled:text-gray-300 ml-2`}
-              disabled={pagination === 3}
-              onClick={() => {
-                setPagination(pagination + 1);
+              onChange={(e) => {
+                setPage(Number(e.target.value));
               }}
-            >
-              <ArrowRight2 className={`w-4 h-4 `} />
-            </button>
+              className={`rounded-md border border-gray-300 w-9 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+            />
+            <p>Of</p>
+            <p>{100}</p>
           </div>
-          <div className={`text-xs sm:text-base mt-3 md:mt-0`}>
-            Showing 1 to {dummy.length} of {dummy.length} entries
-          </div>
+
+          {/* Button Next */}
+
+          <button
+            onClick={() => {
+              handleNext();
+            }}
+            disabled={filter.page === 100}
+            className={`disabled:text-gray-200`}
+          >
+            <ArrowRight2 />
+          </button>
         </div>
       </div>
       {/* <Alert className={`fixed top-0 z-50 !max-w-[450px] `} /> */}

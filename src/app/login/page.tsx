@@ -25,8 +25,8 @@ export default function Login() {
     runAsync(login)
       .then((res) => {
         console.log(res);
-        localStorageMixins.set("access_token", res.access_token);
-        localStorageMixins.set("profile", res.profile);
+        localStorageMixins.set("access_token", res.result.access_token);
+        localStorageMixins.set("profile", res.result.profile);
         router.push("/");
       })
       .catch((err) => {

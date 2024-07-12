@@ -1,7 +1,7 @@
 export interface PostUserProps {
   name: string;
   email: string;
-  role: ERole | "";
+  roles: ERole[];
   password: string;
   status: EUserStatus;
 }
@@ -20,7 +20,7 @@ export interface PostUserResponseProps {
 export interface IPostUserResponseResult {
   email: string;
   name: string;
-  role: ERole;
+  roles: ERole;
   status: string;
   id: string;
   createdAt: Date;
@@ -30,6 +30,6 @@ export interface IPostUserResponseResult {
 
 export enum ERole {
   ADMIN = "ADMIN",
-  SELLING_AGENT = "selling_agent",
-  LISTING_AGENT = "listing_agent",
+  SELLING_AGENT = "SELLING_AGENT",
+  LISTING_AGENT = "LISTING_AGENT",
 }

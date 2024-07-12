@@ -38,6 +38,7 @@ export default function EditUser({ params }: EditUserParams) {
 
   const handleSubmit = (values: PostUserProps) => {
     setModalSubmit(false);
+    console.log(values);
     runAsync(params.id, values).then((res) => {
       setModalSuccess(true);
     });
@@ -48,7 +49,7 @@ export default function EditUser({ params }: EditUserParams) {
       email: data?.result.email!,
       password: data?.result.password!,
       name: data?.result.name!,
-      role: data?.result.role as ERole,
+      roles: data?.result.roles as ERole[],
       status: data?.result.status as EUserStatus,
     });
   };

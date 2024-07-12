@@ -47,10 +47,15 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
   useEffect(() => {
     // this is just an example. do whatever you want to do here
     // to retrieve your editors content from somewhere
-    if (editor) {
+    let html = editor?.getHTML();
+    if (html !== value && editor) {
       editor.commands.clearContent();
       editor?.commands.setContent(value!);
     }
+    // if (editor) {
+    //   editor.commands.clearContent();
+    //   editor?.commands.setContent(value!);
+    // }
   }, [value, editor]);
   return (
     <div className={className}>

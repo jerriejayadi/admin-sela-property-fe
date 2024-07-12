@@ -1,3 +1,5 @@
+import { ERole } from "./user/postUser";
+
 export interface RequestLoginProps {
   email: string;
   password: string;
@@ -18,6 +20,6 @@ export interface IProfile {
   id: string;
   name: string;
   email: string;
-  role: string;
+  roles: ERole[];
   image: string;
 }

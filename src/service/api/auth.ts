@@ -9,14 +9,14 @@ import { PostUserProps, PostUserResponseProps } from "../types/user/postUser";
 
 export const postLogin = (
   request: RequestLoginProps
-): Promise<IResult> => {
+): Promise<ResponseLoginProps> => {
   return apiClient.post(`/apis/admin/login`, request);
 };
 
 export const postUser = (
   request: PostUserProps
 ): Promise<PostUserResponseProps> => {
-  return apiClient.post(`/apis/admin`, request);
+  return apiClient.post(`/apis/admin/register`, request);
 };
 
 export const putUser = (

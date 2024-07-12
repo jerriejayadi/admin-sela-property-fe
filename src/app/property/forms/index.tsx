@@ -9,7 +9,10 @@ import { useEffect, useState } from "react";
 import { uploadFile, getFile, deleteFile } from "@/firebase/uploadFile";
 import { localStorageMixins } from "@/localStorage.mixins";
 import Input from "@/components/Atoms/Input";
-import { PostPropertyProps } from "@/service/types/property/postProperty";
+import {
+  EStatusProperty,
+  PostPropertyProps,
+} from "@/service/types/property/postProperty";
 import {
   IDetailPropertyImage,
   IResult,
@@ -43,7 +46,7 @@ export default function Forms({
     keyFeatureEn: "",
     descriptionId: "",
     keyFeatureId: "",
-    status: false,
+    status: EStatusProperty.DRAFT,
     published: false,
     availability: false,
     landSize: "",
@@ -78,6 +81,7 @@ export default function Forms({
       regency: yup.string().required("Regency must be filled"),
       subdistrict: yup.string().required("Subdistrict must be filled"),
     }),
+    sellingType: yup.string().required("Must choose at least 1 selling type!"),
     // Add more validation rules for other fields as needed
   });
   const [modalSubmit, setModalSubmit] = useState<boolean>(false);
@@ -191,46 +195,81 @@ export default function Forms({
       {/* Left side */}
       <div className={`w-full md:w-[50%]`}>
         {/* Status */}
-        {profile?.role! === ERole.ADMIN && (
-          <div className={`bg-white divide-y px-6 py-5 mb-4 `}>
-            <div className={` pb-3 font-montserrat`}>
-              <div className={` font-medium body1`}>Status</div>
-              <div className={`body3 text-gray-400 mt-1`}>Data Status</div>
-            </div>
-            <div className={`flex flex-col py-5 gap-5`}>
-              <div className={`flex items-center justify-between`}>
-                <div>Availability</div>
-                <div>
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      name={`availability`}
-                      onChange={formik.handleChange}
-                      type="checkbox"
-                      checked={formik.values.availability}
-                      className="sr-only peer"
-                    />
-                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                  </label>
-                </div>
-              </div>
-              <div className={`flex items-center justify-between`}>
-                <div>Published</div>
-                <div>
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      name={`published`}
-                      onChange={formik.handleChange}
-                      type="checkbox"
-                      checked={formik.values.published}
-                      className="sr-only peer"
-                    />
-                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
+
+        <div className={`bg-white divide-y px-6 py-5 mb-4 `}>
+          <div className={` pb-3 font-montserrat`}>
+            <div className={` font-medium body1`}>Status</div>
+            <div className={`body3 text-gray-400 mt-1`}>Data Status</div>
           </div>
-        )}
+          <div className={`flex flex-col py-5 gap-5`}>
+            {profile?.roles.some((rows: string) => rows === ERole.ADMIN) && (
+              <>
+                <div className={`flex items-center justify-between`}>
+                  <div>Availability</div>
+                  <div>
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        name={`availability`}
+                        onChange={formik.handleChange}
+                        type="checkbox"
+                        checked={formik.values.availability}
+                        className="sr-only peer"
+                      />
+                      <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                </div>
+                <div className={`flex items-center justify-between`}>
+                  <div>Published</div>
+                  <div>
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        name={`published`}
+                        onChange={formik.handleChange}
+                        type="checkbox"
+                        checked={formik.values.published}
+                        className="sr-only peer"
+                      />
+                      <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                </div>
+              </>
+            )}
+            <div className={`flex items-start justify-between`}>
+              <div>Selling Type</div>
+              <div className={`flex items-center gap-4 `}>
+                <div className={`flex items-center gap-2`}>
+                  <input
+                    onChange={formik.handleChange}
+                    className={`w-5 h-5 accent-primary`}
+                    name={`sellingType`}
+                    type={`radio`}
+                    value={`SELL`}
+                    checked={formik.values.sellingType === "SELL"}
+                  />{" "}
+                  SELL
+                </div>
+                <div className={`flex items-center gap-2`}>
+                  <input
+                    onChange={formik.handleChange}
+                    className={`w-5 h-5 accent-primary`}
+                    name={`sellingType`}
+                    type={`radio`}
+                    value={`RENT`}
+                    checked={formik.values.sellingType === "RENT"}
+                  />{" "}
+                  RENT
+                </div>
+              </div>
+            </div>
+            {formik.errors.sellingType && (
+              <div className={`text-red-500 text-sm`}>
+                {formik.errors.sellingType}
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Attachment */}
         <div className={`bg-white divide-y px-6 py-5 `}>

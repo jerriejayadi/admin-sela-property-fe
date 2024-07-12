@@ -1,4 +1,6 @@
 import { localStorageMixins } from "@/localStorage.mixins";
+import { EStatusProperty } from "@/service/types/property/postProperty";
+import { IResult } from "@/service/types/property/propertyList";
 import { useState, useRef, useEffect } from "react";
 
 export const currencyFormat = (input: string | number) => {
@@ -82,15 +84,41 @@ export const translateStatusProperty = (status: string) => {
   return splittedStatus.join(" ");
 };
 
-export const translateRoleUser = (role: string) => {
-  const splittedStatus = role.split("_");
-
-  for (let i = 0; i < splittedStatus.length; i++) {
-    splittedStatus[i] =
-      splittedStatus[i].charAt(0).toUpperCase() +
-      splittedStatus[i].substring(1).toLowerCase();
+export const statusPropertyColor = (status: EStatusProperty) => {
+  switch (status) {
+    case EStatusProperty.DRAFT:
+      return "warning";
+    case EStatusProperty.APPROVED:
+      return "success";
+    case EStatusProperty.REJECTED:
+      return "error";
+    default:
+      return "success";
   }
-  return splittedStatus.join(" ");
+};
+
+export const translateRoleUser = (role: string[]) => {
+  const splittedStatus = role.map((rows) => {
+    let splittedString = rows.split("_");
+    for (let i = 0; i < splittedString.length; i++) {
+      splittedString[i] =
+        splittedString[i].charAt(0).toUpperCase() +
+        splittedString[i].substring(1).toLowerCase();
+    }
+    return splittedString.join(" ");
+  });
+
+  return splittedStatus.join(",");
+};
+
+export const translateAvailabilityProperty = (data: any) => {
+  if (data.availability) {
+    return "available";
+  } else if (!data.availability && data.sellingType === "SELL") {
+    return "sold";
+  } else if (!data.availability && data.sellingType === "RENT") {
+    return "rented";
+  }
 };
 
 export const myProfile = () => {

@@ -4,12 +4,12 @@ export interface PostPropertyProps {
   title: string;
   propertyType: string;
   price: string;
-  googleDriveUrl:string;
+  googleDriveUrl: string;
   descriptionEn: string;
   keyFeatureEn: string;
   descriptionId: string;
   keyFeatureId: string;
-  status: boolean;
+  status: EStatusProperty;
   published: boolean;
   availability: boolean;
   landSize: string;
@@ -21,4 +21,11 @@ export interface PostPropertyProps {
   carParkAmount: string;
   address: IAddress;
   images?: IDetailPropertyImage[];
+  sellingType?: string;
+}
+
+export enum EStatusProperty {
+  DRAFT = "draft",
+  APPROVED = "approved",
+  REJECTED = "rejected",
 }

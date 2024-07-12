@@ -1,3 +1,5 @@
+import { ERole } from "./postUser";
+
 export interface GetUserParams {
   keyword?: string;
   role?: string;
@@ -21,7 +23,7 @@ export interface Item {
   id: string;
   name: string;
   email: string;
-  role: string;
+  roles: ERole[];
   status: string;
 }
 
@@ -41,7 +43,7 @@ export interface GetUserDetailProps {
     name: string;
     email: string;
     password?: string;
-    role: string;
+    roles: ERole[];
     status: string;
   };
 }
