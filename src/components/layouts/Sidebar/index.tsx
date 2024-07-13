@@ -185,6 +185,14 @@ export default function Sidebar({ children }: SideBarProps) {
                   menu ? "flex" : "hidden"
                 } absolute top-[65px] divide-y-2 flex flex-col bg-white border border-gray-700 border-opacity-20 shadow-lg drop-shadow-lg px-6 py-3 w-60 cursor-default`}
               >
+                {/* <button
+                  onClick={() => {
+                    router.push(`/profile`);
+                  }}
+                  className={`w-full text-left active:text-primary md:hover:text-primary py-4`}
+                >
+                  Profile
+                </button> */}
                 <button
                   onClick={handleLogout}
                   className={`w-full text-left active:text-primary md:hover:text-primary py-4`}

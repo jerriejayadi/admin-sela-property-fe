@@ -26,7 +26,7 @@ export const putPublished = (id: string, payload: { published: boolean }) => {
   return apiClient.put(`/apis/property/published/${id}`, payload);
 };
 
-export const putPropertyApproval = (propertyId: string, payload:any) => {
+export const putPropertyApproval = (propertyId: string, payload: any) => {
   return apiClient.put(`/apis/property-approval/${propertyId}`, payload);
 };
 
@@ -35,4 +35,8 @@ export const putPropertyDetail = (
   payload: PostPropertyProps
 ) => {
   return apiClient.put(`/apis/property/${propertyId}`, payload);
+};
+
+export const deleteProperty = (id: string) => {
+  return apiClient.delete(`/apis/property/${id}`);
 };

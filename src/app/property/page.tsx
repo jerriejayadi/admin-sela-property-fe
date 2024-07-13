@@ -8,7 +8,7 @@ import {
   CloseCircle,
   TickCircle,
 } from "iconsax-react";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { DummyProps, dummy } from "./dummy";
 import {
   currencyFormat,
@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import Chip from "@/components/Atoms/Chip";
 import { useRequest } from "ahooks";
 import {
+  deleteProperty,
   getPropertyList,
   putPropertyApproval,
   putPublished,
@@ -39,6 +40,8 @@ import { EStatusProperty } from "@/service/types/property/postProperty";
 import { GetUserParams } from "@/service/types/user/getUser";
 import ActionModals from "@/components/Atoms/Modals/ActionModals";
 import FeedbackModals from "@/components/Atoms/Modals/FeedbackModals";
+import Button from "@/components/Atoms/Button";
+import { CSVLink } from "react-csv";
 
 export default function Property() {
   const profile = myProfile();
@@ -47,6 +50,7 @@ export default function Property() {
   const [pagination, setPagination] = useState<number>(1);
   const [data, setData] = useState<any>();
   const [selected, setSelected] = useState<string>();
+  const [modalDelete, setModalDelete] = useState<boolean>(false);
   const [modalApprove, setModalApprove] = useState<boolean>(false);
   const [modalReject, setModalReject] = useState<boolean>(false);
 
@@ -54,6 +58,7 @@ export default function Property() {
     data: resProperty,
     runAsync: fetchList,
     loading,
+    error,
   } = useRequest(getPropertyList);
 
   const { runAsync: updatePublished, loading: updatePublishedLoading } =
@@ -84,6 +89,15 @@ export default function Property() {
   const handleReject = () => {
     setModalReject(false);
     putApproval(selected!, { status: "rejected", note: "-" }).then(() => {
+      fetchList({}).then((res) => {
+        setData(res.result.items);
+      });
+    });
+  };
+
+  const handleDelete = () => {
+    setModalDelete(false);
+    deleteProperty(selected!).then(() => {
       fetchList({}).then((res) => {
         setData(res.result.items);
       });
@@ -123,6 +137,15 @@ export default function Property() {
       setData(res.result.items);
     });
   }, [filter]);
+
+  // CSV
+
+  const csvRef = useRef<
+    CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }
+  >();
+  const getTransactionData = async () => {
+    csvRef?.current?.link?.click();
+  };
   return (
     <div className={`text-black flex flex-col gap-6 pb-20`}>
       {/* Table */}
@@ -172,16 +195,35 @@ export default function Property() {
               }}
               className={`px-3 py-2 border rounded-lg border-opacity-20 border-black focus:outline-none focus:border-primary focus:shadow-sm transition-colors duration-150 active:outline-none`}
             >
-              <option value={``}>All</option>
-              <option value={'true'}>Available</option>
-              <option value={'false'}>Sold/Rented</option>
+              <option value={`a`}>All</option>
+              <option value={"true"}>Available</option>
+              <option value={"false"}>Sold/Rented</option>
             </select>
           </div>
 
+          {/* Export CSV */}
+          {profile?.roles.some((rows: string) => rows === ERole.ADMIN) && (
+            <>
+              <Button
+                className={`!w-[250px] !rounded-lg`}
+                onClick={() => {
+                  getTransactionData();
+                }}
+              >
+                Export as CSV
+              </Button>
+              <CSVLink
+                style={{ height: "100%" }}
+                data={data ?? []}
+                filename={`${new Date("yyyy")}property-list.csv`}
+                ref={csvRef as any}
+              />
+            </>
+          )}
+
           {/* Button Property */}
           {profile?.roles.some(
-            (rows: string) =>
-              rows === ERole.LISTING_AGENT || rows === ERole.ADMIN
+            (rows: string) => rows === ERole.LISTING_AGENT
           ) && (
             <Link
               href={`/property/create`}
@@ -219,101 +261,151 @@ export default function Property() {
               </tr>
             </thead>
             <tbody>
-              {data?.map((rows: any, index: number) => (
-                <tr
-                  onClick={() => {
-                    router.push(`/property/detail/${rows.id}`);
-                  }}
-                  key={index}
-                  className={`border-b border-[#E5E5E5] hover:bg-gray-100 bg-white`}
-                >
+              {loading ? (
+                [0, 1, 2].map((rows) => (
+                  <>
+                    <tr>
+                      <td className={` pl-4 md:pl-8 pr-4 py-1`}>
+                        <div
+                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                        />
+                      </td>
+                      <td className={`w-[100px] px-3 py-2 `}>
+                        <div
+                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                        />
+                      </td>
+                      <td className={`w-[100px] px-3 py-2 `}>
+                        <div
+                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                        />
+                      </td>
+                      <td className={`w-[100px] px-3 py-2 `}>
+                        <div
+                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                        />
+                      </td>
+                      <td className={`w-[100px] px-3 py-2 `}>
+                        <div
+                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                        />
+                      </td>
+                      <td className={`w-[100px] px-3 py-2 `}>
+                        <div
+                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                        />
+                      </td>
+                      <td className={`w-[100px] px-3 py-2 `}>
+                        <div
+                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                        />
+                      </td>
+                    </tr>
+                  </>
+                ))
+              ) : error ? (
+                <tr>
                   <td
-                    className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-4 sticky left-0 bg-inherit z-40`}
+                    className={`text-center font-semibold text-2xl py-10 `}
+                    colSpan={7}
                   >
-                    <Image
-                      alt={""}
-                      src={rows.images[0]?.url ?? ""}
-                      loader={({ src }) => src}
-                      width={300}
-                      height={300}
-                      className={`w-10 h-10 md:w-20 md:h-20  object-cover shrink-0`}
-                    />
-                    <div className={`line-clamp-3`}>{rows.title}</div>
+                    DATA NOT FOUND
                   </td>
-                  <td className={`px-3 py-2 `}>{rows.propertyType}</td>
+                </tr>
+              ) : (
+                data?.map((rows: any, index: number) => (
+                  <tr
+                    onClick={() => {
+                      router.push(`/property/detail/${rows.id}`);
+                    }}
+                    key={index}
+                    className={`border-b border-[#E5E5E5] hover:bg-gray-100 bg-white`}
+                  >
+                    <td
+                      className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-4 sticky left-0 bg-inherit z-40`}
+                    >
+                      <Image
+                        alt={""}
+                        src={rows.images[0]?.url ?? ""}
+                        loader={({ src }) => src}
+                        width={300}
+                        height={300}
+                        className={`w-10 h-10 md:w-20 md:h-20  object-cover shrink-0`}
+                      />
+                      <div className={`line-clamp-3`}>{rows.title}</div>
+                    </td>
+                    <td className={`px-3 py-2 `}>{rows.propertyType}</td>
 
-                  <td className={`px-3 py-2  truncate`}>
-                    Rp{currencyFormat(rows.price)}
-                  </td>
-                  <td className={`px-3 py-2  `}>
-                    {translateAvailabilityProperty(rows)}
-                  </td>
-                  <td className={`px-3 py-2 `}>
-                    <Chip color={statusColorChip(rows.status)}>
-                      {translateStatusProperty(rows.status)}
-                    </Chip>
-                  </td>
-                  <td className={`pl-3 pr-8 py-2 `}>
-                    {profile?.roles.some(
-                      (rows: string) => rows === ERole.ADMIN
-                    ) ? (
-                      <label
+                    <td className={`px-3 py-2  truncate`}>
+                      Rp{currencyFormat(rows.price)}
+                    </td>
+                    <td className={`px-3 py-2  `}>
+                      {translateAvailabilityProperty(rows)}
+                    </td>
+                    <td className={`px-3 py-2 `}>
+                      <Chip color={statusColorChip(rows.status)}>
+                        {translateStatusProperty(rows.status)}
+                      </Chip>
+                    </td>
+                    <td className={`pl-3 pr-8 py-2 `}>
+                      {profile?.roles.some(
+                        (rows: string) => rows === ERole.ADMIN
+                      ) ? (
+                        <label
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          className="inline-flex items-center cursor-pointer"
+                        >
+                          <input
+                            onChange={() => {
+                              handlePublishedStatus(rows.id, rows.published);
+                            }}
+                            type="checkbox"
+                            checked={rows.published}
+                            className="sr-only peer"
+                            disabled={rows.status !== EStatusProperty.APPROVED}
+                          />
+                          <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-disabled:bg-gray-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary peer-disabled:cursor-default "></div>
+                        </label>
+                      ) : (
+                        <Chip color={rows.published ? "success" : "disabled"}>
+                          {translateStatusProperty(
+                            rows.published ? "published" : "unpublished"
+                          )}
+                        </Chip>
+                      )}
+                    </td>
+                    <td className={` pl-3 `}>
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
+                          e.preventDefault();
+                          router.push(`/property/detail/${rows.id}`);
                         }}
-                        className="inline-flex items-center cursor-pointer"
+                        className={`flex items-center gap-2 hover:text-primary`}
                       >
-                        <input
-                          onChange={() => {
-                            handlePublishedStatus(rows.id, rows.published);
-                          }}
-                          type="checkbox"
-                          checked={rows.published}
-                          className="sr-only peer"
-                          disabled={rows.status !== EStatusProperty.APPROVED}
-                        />
-                        <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none  peer-focus:ring-primary dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-disabled:bg-gray-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary peer-disabled:cursor-default "></div>
-                      </label>
-                    ) : (
-                      <Chip color={rows.published ? "success" : "disabled"}>
-                        {translateStatusProperty(
-                          rows.published ? "published" : "unpublished"
-                        )}
-                      </Chip>
-                    )}
-                  </td>
-                  <td className={` pl-3 `}>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        router.push(`/property/detail/${rows.id}`);
-                      }}
-                      className={`flex items-center gap-2 hover:text-primary`}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                        />
-                      </svg>
-                      <div>Detail</div>
-                    </button>
-                    {profile?.roles.some(
-                      (rows: string) =>
-                        rows === ERole.LISTING_AGENT || rows === ERole.ADMIN
-                    ) &&
-                      (rows.status === EStatusProperty.APPROVED ||
-                        rows.status === EStatusProperty.DRAFT) && (
-                        <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                          />
+                        </svg>
+                        <div>Detail</div>
+                      </button>
+                      {profile?.roles.some(
+                        (rows: string) => rows === ERole.LISTING_AGENT
+                      ) &&
+                        (rows.status === EStatusProperty.APPROVED ||
+                          rows.status === EStatusProperty.DRAFT) && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -338,66 +430,74 @@ export default function Property() {
                             </svg>
                             <div>Edit</div>
                           </button>
-                          <button
-                            onClick={() => {
-                              router.push(`/property/edit/${rows.id}`);
-                            }}
-                            className={`flex items-center gap-2 mt-2 hover:text-primary`}
+                        )}
+                      {profile.roles.some(
+                        (rows: string) => rows === ERole.ADMIN
+                      ) && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelected(rows.id);
+                            setModalDelete(true);
+                          }}
+                          className={`flex items-center gap-2 mt-2 hover:text-primary`}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-6"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="size-6"
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                            />
+                          </svg>
+
+                          <div>Delete</div>
+                        </button>
+                      )}
+
+                      {profile?.roles.some(
+                        (rows: string) => rows === ERole.ADMIN
+                      ) &&
+                        rows.status === EStatusProperty.IN_REVIEW && (
+                          <>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setSelected(rows.id);
+                                setModalApprove(true);
+                              }}
+                              className={`flex items-center gap-2 mt-2 hover:text-primary`}
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                              />
-                            </svg>
+                              <TickCircle className="size-6" />
+                              <div>Approve</div>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setSelected(rows.id);
+                                setModalReject(true);
+                              }}
+                              className={`flex items-center gap-2 mt-2 hover:text-primary`}
+                            >
+                              <CloseCircle className="size-6" />
 
-                            <div>Delete</div>
-                          </button>
-                        </>
-                      )}
-                    {profile?.roles.some(
-                      (rows: string) => rows === ERole.ADMIN
-                    ) &&
-                      rows.status === EStatusProperty.IN_REVIEW && (
-                        <>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              setSelected(rows.id);
-                              setModalApprove(true);
-                            }}
-                            className={`flex items-center gap-2 mt-2 hover:text-primary`}
-                          >
-                            <TickCircle className="size-6" />
-                            <div>Approve</div>
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              setSelected(rows.id);
-                              setModalReject(true);
-                            }}
-                            className={`flex items-center gap-2 mt-2 hover:text-primary`}
-                          >
-                            <CloseCircle className="size-6" />
-
-                            <div>Reject</div>
-                          </button>
-                        </>
-                      )}
-                  </td>
-                </tr>
-              ))}
+                              <div>Reject</div>
+                            </button>
+                          </>
+                        )}
+                    </td>
+                  </tr>
+                ))
+              )}
+              {}
             </tbody>
           </table>
         </div>
@@ -491,6 +591,24 @@ export default function Property() {
         Before rejecting this property request, please review the details
         carefully. Once rejected, the requester will be notified, and the
         property will be added to our system.
+      </ActionModals>
+      <ActionModals
+        title={"Delete this Property?"}
+        onReject={function (): void {
+          setModalDelete(false);
+        }}
+        onSubmit={function (): void {
+          handleDelete();
+        }}
+        rejectButtonText="Cancel"
+        open={modalDelete}
+        onClose={function (): void {
+          setModalDelete(false);
+        }}
+        approveButtonText="Delete"
+      >
+        Please make sure before deleting this property. Once deleted, the data
+        will be deleted forever.
       </ActionModals>
 
       {/* <Alert className={`fixed top-0 z-50 !max-w-[450px] `} /> */}

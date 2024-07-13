@@ -65,6 +65,7 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
         {/* Headings */}
         <div className={`flex items-center justify-center pr-3`}>
           <button
+            type={"button"}
             onClick={() => {
               editor!.chain().focus().toggleHeading({ level: 1 }).run();
             }}
@@ -75,6 +76,7 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
             H1
           </button>
           <button
+            type={"button"}
             onClick={() => {
               editor!.chain().focus().toggleHeading({ level: 2 }).run();
             }}
@@ -85,6 +87,7 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
             H2
           </button>
           <button
+            type={"button"}
             onClick={() => {
               editor!.chain().focus().toggleHeading({ level: 3 }).run();
             }}
@@ -99,6 +102,7 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
         {/* Text Decoration */}
         <div className={`px-2 flex `}>
           <button
+            type={"button"}
             onClick={() => {
               editor!.chain().focus().toggleBold().run();
             }}
@@ -109,6 +113,7 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
             <TextBold className={`w-4 h-4`} />
           </button>
           <button
+            type={"button"}
             onClick={() => {
               editor!.chain().focus().toggleItalic().run();
             }}
@@ -119,6 +124,7 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
             <TextItalic className={`w-4 h-4`} />
           </button>
           <button
+            type={"button"}
             onClick={() => {
               editor!.chain().focus().toggleStrike().run();
             }}
@@ -135,6 +141,7 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
         </div>
         <div>
           <button
+            type={"button"}
             onClick={() => {
               editor!.chain().focus().toggleBulletList().run();
             }}

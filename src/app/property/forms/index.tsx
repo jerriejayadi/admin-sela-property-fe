@@ -48,7 +48,7 @@ export default function Forms({
     keyFeatureId: "",
     status: EStatusProperty.DRAFT,
     published: false,
-    availability: false,
+    availability: true,
     landSize: "",
     landSizeMeasurement: "sqm",
     buildingSize: "",
