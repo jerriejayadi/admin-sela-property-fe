@@ -20,6 +20,18 @@ export const currencyFormat = (input: string | number) => {
   }
 };
 
+export const numberFormat = (input: string | number) => {
+  let value = input;
+  if (typeof value === "number") {
+    value = value.toString();
+  }
+  if (value.match(/^[0-9]/)) {
+    return value;
+  } else {
+    return "";
+  }
+};
+
 export const toTitleCase = (string: string) => {
   let arr = string?.split(/[-_ \s]+/);
   for (let i = 0; i < arr?.length; i++) {

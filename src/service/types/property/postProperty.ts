@@ -1,8 +1,9 @@
+import { EPropertyType } from "./EPropertyType";
 import { IAddress, IDetailPropertyImage } from "./propertyDetail";
 
 export interface PostPropertyProps {
   title: string;
-  propertyType: string;
+  propertyType: EPropertyType;
   price: string;
   googleDriveUrl: string;
   descriptionEn: string;
@@ -22,6 +23,8 @@ export interface PostPropertyProps {
   address: IAddress;
   images?: IDetailPropertyImage[];
   sellingType?: string;
+  owner: string;
+  ownerPhone: string;
 }
 
 export enum EStatusProperty {

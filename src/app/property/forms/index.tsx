@@ -2,7 +2,7 @@ import Button from "@/components/Atoms/Button";
 import TipTap from "@/components/Atoms/TipTap";
 import UploadFile from "@/components/Atoms/UploadFile";
 import UploadImage from "@/components/Atoms/UploadImage";
-import { currencyFormat, myProfile } from "@/utils";
+import { currencyFormat, myProfile, numberFormat } from "@/utils";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useEffect, useState } from "react";
@@ -19,6 +19,8 @@ import {
 } from "@/service/types/property/propertyDetail";
 import Image from "next/image";
 import { ERole } from "@/service/types/user/postUser";
+import { EPropertyType } from "@/service/types/property/EPropertyType";
+import { PropertyType } from "@/utils/propertyType";
 
 interface IImage extends IDetailPropertyImage {
   file?: string;
@@ -38,7 +40,7 @@ export default function Forms({
 }: FormsProps) {
   const [initialValues, setInitialValues] = useState<PostPropertyProps>({
     title: "",
-    propertyType: "villa",
+    propertyType: EPropertyType.HOUSE,
     price: "",
     // description: [{ title: "", description: "Hello World" }],
     googleDriveUrl: "",
@@ -62,6 +64,8 @@ export default function Forms({
       regency: "",
       subdistrict: "",
     },
+    owner: "",
+    ownerPhone: "",
   });
   const validationSchema = yup.object({
     title: yup.string().required("Title is required"),
@@ -82,6 +86,8 @@ export default function Forms({
       subdistrict: yup.string().required("Subdistrict must be filled"),
     }),
     sellingType: yup.string().required("Must choose at least 1 selling type!"),
+    owner: yup.string().required("must include owner's name"),
+    ownerPhone: yup.string().required("must include Owner's Phone Number  "),
     // Add more validation rules for other fields as needed
   });
   const [modalSubmit, setModalSubmit] = useState<boolean>(false);
@@ -171,6 +177,7 @@ export default function Forms({
         images: image,
         facilities: [],
         tags: [],
+        ownerPhone: "+62" + values.ownerPhone,
       };
       onSubmit(submit);
     },
@@ -348,11 +355,11 @@ export default function Forms({
                   defaultValue={`villa`}
                   className={`bg-[#fcfcfc]  border border-gray-300 focus:border-b focus:outline-none focus:border-primary  px-5 py-3 rounded-lg w-full `}
                 >
-                  <option value={"house"}>House</option>
-                  <option value={"villa"}>Villa</option>
-                  <option value={"apartment"}>Apartment</option>
-                  <option value={"land"}>Tanah</option>
-                  <option value={"others"}>Lain-lain</option>
+                  {PropertyType.map((rows, index) => (
+                    <option key={index} value={rows.value}>
+                      {rows.name}
+                    </option>
+                  ))}
                 </select>
                 {formik.errors.propertyType && (
                   <div className={`text-red-500 text-sm`}>
@@ -522,6 +529,40 @@ export default function Forms({
                     placeholder={`https://maps.app.goo.gl/F7UYqCeGAaE3hSZ27`}
                     label={"Google Maps URL"}
                     onChange={formik.handleChange}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={`divide-y-2`}>
+              <div className={`body1 pb-3`}>Owner Data</div>
+              <div className={`pt-3`}>
+                <div className={`grid md:grid-cols-2 gap-4`}>
+                  <Input
+                    errorMessage={formik.touched.owner && formik.errors.owner}
+                    value={formik.values.owner}
+                    id={"owner"}
+                    name={"owner"}
+                    placeholder={`Enter Owner Name`}
+                    label={"Name"}
+                    onChange={formik.handleChange}
+                  />
+                  <Input
+                    errorMessage={
+                      formik.touched.ownerPhone && formik.errors.ownerPhone
+                    }
+                    value={formik.values.ownerPhone}
+                    id={"ownerPhone"}
+                    name={"ownerPhone"}
+                    placeholder={`Enter Owner Phone Number`}
+                    label={"Phone Number"}
+                    onChange={(e) => {
+                      formik.setFieldValue(
+                        "ownerPhone",
+                        numberFormat(e.target.value)
+                      );
+                    }}
+                    withPrefix
+                    prefix="+62"
                   />
                 </div>
               </div>

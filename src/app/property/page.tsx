@@ -29,6 +29,7 @@ import {
 } from "@/service/api/property";
 import {
   IPropertyList,
+  RequestPropertyListParamsProps,
   ResponsePropertyProps,
 } from "@/service/types/property/propertyList";
 import Image from "next/image";
@@ -42,6 +43,8 @@ import ActionModals from "@/components/Atoms/Modals/ActionModals";
 import FeedbackModals from "@/components/Atoms/Modals/FeedbackModals";
 import Button from "@/components/Atoms/Button";
 import { CSVLink } from "react-csv";
+import { PropertyType } from "@/utils/propertyType";
+import moment from "moment";
 
 export default function Property() {
   const profile = myProfile();
@@ -49,6 +52,7 @@ export default function Property() {
 
   const [pagination, setPagination] = useState<number>(1);
   const [data, setData] = useState<any>();
+  const [csv, setCSV] = useState<any>();
   const [selected, setSelected] = useState<string>();
   const [modalDelete, setModalDelete] = useState<boolean>(false);
   const [modalApprove, setModalApprove] = useState<boolean>(false);
@@ -105,11 +109,12 @@ export default function Property() {
   };
 
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState<GetUserParams>({
+  const [filter, setFilter] = useState<RequestPropertyListParamsProps>({
     keyword: "",
-    role: "",
+    propertyType: "",
     limit: 10,
     page: 1,
+    availability: "",
   });
 
   const handlePrevious = () => {
@@ -132,9 +137,25 @@ export default function Property() {
     }
   };
 
+  const manageCSVData = (data: any) => {
+    let temp = data.map((rows: any) => ({
+      propertyNumber: rows.propertyNumber,
+      propertyTitle: rows.title,
+      propertyType: rows.propertyType,
+      price: rows.price,
+      availability: rows.availability
+        ? "Available"
+        : rows.sellingType === "RENT"
+        ? "Rent"
+        : "Sold",
+    }));
+    setCSV(temp);
+  };
+
   useEffect(() => {
     fetchList(filter).then((res) => {
       setData(res.result.items);
+      manageCSVData(res.result.items);
     });
   }, [filter]);
 
@@ -183,8 +204,11 @@ export default function Property() {
               className={` px-3 py-2 border rounded-lg border-opacity-20 border-black focus:outline-none focus:border-primary focus:shadow-sm transition-colors duration-150 active:outline-none`}
             >
               <option value={``}>All</option>
-              <option value={`villa`}>Villa</option>
-              <option value={`house`}>House</option>
+              {PropertyType.map((rows, index) => (
+                <option key={index} value={rows.value}>
+                  {rows.name}
+                </option>
+              ))}
             </select>
             <select
               onChange={(e) => {
@@ -205,6 +229,7 @@ export default function Property() {
           {profile?.roles.some((rows: string) => rows === ERole.ADMIN) && (
             <>
               <Button
+                disabled={loading}
                 className={`!w-[250px] !rounded-lg`}
                 onClick={() => {
                   getTransactionData();
@@ -214,8 +239,10 @@ export default function Property() {
               </Button>
               <CSVLink
                 style={{ height: "100%" }}
-                data={data ?? []}
-                filename={`${new Date("yyyy")}property-list.csv`}
+                data={csv ?? []}
+                filename={`${moment(new Date()).format(
+                  "YYYY-MM-DD"
+                )}_property-list.csv`}
                 ref={csvRef as any}
               />
             </>
@@ -332,7 +359,12 @@ export default function Property() {
                         height={300}
                         className={`w-10 h-10 md:w-20 md:h-20  object-cover shrink-0`}
                       />
-                      <div className={`line-clamp-3`}>{rows.title}</div>
+                      <div className={`flex flex-col line-clamp-3 gap-1`}>
+                        <div>{rows.title}</div>
+                        <div className={`text-gray-500 text-xs`}>
+                          {rows.propertyNumber ?? "-"}
+                        </div>
+                      </div>
                     </td>
                     <td className={`px-3 py-2 `}>{rows.propertyType}</td>
 
@@ -404,7 +436,7 @@ export default function Property() {
                       {profile?.roles.some(
                         (rows: string) => rows === ERole.LISTING_AGENT
                       ) &&
-                        (rows.status === EStatusProperty.APPROVED ||
+                        (rows.status === EStatusProperty.REJECTED ||
                           rows.status === EStatusProperty.DRAFT) && (
                           <button
                             onClick={(e) => {

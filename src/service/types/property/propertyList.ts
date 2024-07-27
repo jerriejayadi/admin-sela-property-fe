@@ -1,7 +1,9 @@
 export interface RequestPropertyListParamsProps {
   keyword?: string;
+  propertyType?: string;
   page?: number;
   limit?: number;
+  availability?: string;
 }
 
 export interface ResponsePropertyProps {

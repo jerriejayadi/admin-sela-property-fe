@@ -36,6 +36,7 @@ import {
 } from "@/service/types/property/postProperty";
 import { useRequest } from "ahooks";
 import { postProperty } from "@/service/api/property";
+import { EPropertyType } from "@/service/types/property/EPropertyType";
 
 interface IImage {
   file: string;
@@ -47,7 +48,7 @@ export default function CreateProperty() {
   const router = useRouter();
   const [payload, setPayload] = useState<PostPropertyProps>({
     title: "",
-    propertyType: "",
+    propertyType: EPropertyType.HOUSE,
     price: "0",
     // description: [{ title: "", description: "Hello World" }],
     googleDriveUrl: "",
@@ -72,6 +73,8 @@ export default function CreateProperty() {
       regency: "",
       subdistrict: "",
     },
+    owner: "",
+    ownerPhone: "",
   });
 
   const [bannerImage, setBannerImage] = useState<IImage[]>([]);
