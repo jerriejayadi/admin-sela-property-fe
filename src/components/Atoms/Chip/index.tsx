@@ -23,7 +23,7 @@ export default function Chip({ children, color = "success" }: ChipProps) {
       break;
   }
   return (
-    <div className={`w-fit px-3 py-1 rounded-3xl ${colorProps} `}>
+    <div className={`w-fit px-3 py-1 rounded-3xl ${colorProps} text-center `}>
       {children}
     </div>
   );
