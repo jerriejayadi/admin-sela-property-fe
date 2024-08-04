@@ -68,6 +68,7 @@ export const titleFilter = (title: string) => {
 export const statusColorChip = (status: string) => {
   switch (status) {
     case "in_review":
+    case "ask_revision":
       return "warning";
     case "approved":
       return "success";
