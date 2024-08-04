@@ -98,6 +98,14 @@ export default function Property() {
       });
     });
   };
+  const handleAskRevision = () => {
+    setModalReject(false);
+    putApproval(selected!, { status: "ask_revision", note: "-" }).then(() => {
+      fetchList({}).then((res) => {
+        setData(res.result.items);
+      });
+    });
+  };
 
   const handleDelete = () => {
     setModalDelete(false);
@@ -349,7 +357,7 @@ export default function Property() {
                     className={`border-b border-[#E5E5E5] hover:bg-gray-100 bg-white`}
                   >
                     <td
-                      className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-4 sticky left-0 bg-inherit z-40`}
+                      className={`pl-4 md:pl-8 pr-3 py-3 flex items-center gap-4 sticky left-0 bg-inherit z-30`}
                     >
                       <Image
                         alt={""}
@@ -436,8 +444,9 @@ export default function Property() {
                       {profile?.roles.some(
                         (rows: string) => rows === ERole.LISTING_AGENT
                       ) &&
-                        (rows.status === EStatusProperty.REJECTED ||
-                          rows.status === EStatusProperty.DRAFT) && (
+                        (rows.status === EStatusProperty.ASK_REVISION ||
+                          rows.status === EStatusProperty.DRAFT ||
+                          rows.status === EStatusProperty.APPROVED) && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -608,12 +617,12 @@ export default function Property() {
       <ActionModals
         title={"Reject this Property?"}
         onReject={function (): void {
-          setModalApprove(false);
+          handleAskRevision();
         }}
         onSubmit={function (): void {
           handleReject();
         }}
-        rejectButtonText="Cancel"
+        rejectButtonText="Ask for Revision"
         open={modalReject}
         onClose={function (): void {
           setModalReject(false);
