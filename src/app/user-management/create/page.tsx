@@ -2,8 +2,8 @@
 
 import ActionModals from "@/components/Atoms/Modals/ActionModals";
 import FeedbackModals from "@/components/Atoms/Modals/FeedbackModals";
-import { Warning2, ChartSuccess } from "iconsax-react";
-import { useState } from "react";
+import { Warning2, ChartSuccess, ChartFail } from "iconsax-react";
+import { useEffect, useState } from "react";
 import Forms from "../forms";
 import { useRequest } from "ahooks";
 import { postUser } from "@/service/api/auth";
@@ -14,15 +14,24 @@ export default function CreateUser() {
   const router = useRouter();
   const [modalSubmit, setModalSubmit] = useState<boolean>(false);
   const [modalSuccess, setModalSuccess] = useState<boolean>(false);
+  const [modalFailed, setModalFailed] = useState<boolean>(false);
   const [submittedData, setSubmittedData] = useState<PostUserProps>();
-  const { runAsync, loading } = useRequest(postUser, { manual: true });
+  const { runAsync, loading, error } = useRequest(postUser, { manual: true });
 
   const handleSubmit = (values: PostUserProps) => {
     setModalSubmit(false);
-    runAsync(values).then((res) => {
-      setModalSuccess(true);
-    });
+    runAsync(values)
+      .then((res) => {
+        setModalSuccess(true);
+      })
+      .catch(() => {
+        setModalFailed(true);
+      });
   };
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   return (
     <div className={``}>
@@ -49,6 +58,8 @@ export default function CreateUser() {
         onClose={function (): void {
           setModalSubmit(false);
         }}
+        rejectButtonText="Cancel"
+        approveButtonText="Submit"
       >
         Make sure to confirm all of the data you entered before submitting.
       </ActionModals>
@@ -65,6 +76,20 @@ export default function CreateUser() {
         }}
       >
         Property has been submitted successfully.
+      </FeedbackModals>
+      <FeedbackModals
+        icons={<ChartFail className={`size-20`} />}
+        title={"Failed to submit data"}
+        open={modalFailed}
+        onClose={function (): void {
+          setModalFailed(false);
+        }}
+        actionText="Try Again"
+        onAction={() => {
+          setModalFailed(false);
+        }}
+      >
+        {error?.message}
       </FeedbackModals>
     </div>
   );
