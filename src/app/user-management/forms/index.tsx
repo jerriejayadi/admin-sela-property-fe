@@ -167,6 +167,7 @@ export default function UserForms({
 
             <label className={`flex items-center gap-2`}>
               <input
+                checked={formik.values.roles?.includes(ERole.SELLING_AGENT)}
                 onChange={formik.handleChange}
                 name={`roles`}
                 value={ERole.SELLING_AGENT}
