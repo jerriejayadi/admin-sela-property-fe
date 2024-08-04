@@ -20,6 +20,7 @@ import {
 } from "@tiptap/react";
 import {
   Add,
+  ChartFail,
   ChartSuccess,
   CloseCircle,
   DocumentUpload,
@@ -84,7 +85,9 @@ export default function CreateProperty() {
   const [modalFailed, setModalFailed] = useState<boolean>(false);
   const [submittedData, setSubmittedData] = useState<PostPropertyProps>();
 
-  const { runAsync, loading } = useRequest(postProperty, { manual: true });
+  const { runAsync, loading, error } = useRequest(postProperty, {
+    manual: true,
+  });
   const handleSubmit = () => {
     setModalSubmit(false);
     // console.log(submittedData!);
@@ -142,6 +145,20 @@ export default function CreateProperty() {
         }}
       >
         Property has been submitted successfully.
+      </FeedbackModals>
+      <FeedbackModals
+        icons={<ChartFail className={`size-20`} />}
+        title={"Failed to submit data"}
+        open={modalFailed}
+        onClose={function (): void {
+          setModalFailed(false);
+        }}
+        actionText="Try Again"
+        onAction={() => {
+          setModalFailed(false);
+        }}
+      >
+        {error?.message}
       </FeedbackModals>
     </div>
   );
