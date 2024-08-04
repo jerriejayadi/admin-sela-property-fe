@@ -26,7 +26,7 @@ export default function FeedbackModals({
         <div className={`h2 font-medium font-montserrat text-center`}>
           {title}
         </div>
-        <div className={`body1 mt-3`}>{children}</div>
+        <div className={`body1 mt-3 text-center`}>{children}</div>
       </div>
       {actionText && (
         <div className="w-full ">
