@@ -6,6 +6,7 @@ import {
   ArrowRight2,
   Check,
   CloseCircle,
+  DocumentDownload,
   TickCircle,
 } from "iconsax-react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -162,7 +163,7 @@ export default function Property() {
 
   useEffect(() => {
     fetchList(filter).then((res) => {
-      setData(res.result.items);
+      setData(res.result);
       manageCSVData(res.result.items);
     });
   }, [filter]);
@@ -234,15 +235,30 @@ export default function Property() {
           </div>
 
           {/* Export CSV */}
-          {profile?.roles.some((rows: string) => rows === ERole.ADMIN) && (
+
+          {/* Button Property */}
+          <div className="flex items-center w-full gap-2 justify-end">
+            {profile?.roles.some(
+              (rows: string) =>
+                rows === ERole.LISTING_AGENT || rows === ERole.ADMIN
+            ) && (
+              <Link
+                href={`/property/create`}
+                className={`w-fit flex grow-0 body2 items-center justify-center bg-primary hover:bg-orange-700 active:bg-orange-700 text-white rounded-lg px-3 gap-2 py-2`}
+              >
+                <Add className={`shrink-0`} /> Create Property
+              </Link>
+            )}
+            {/* {profile?.roles.some((rows: string) => rows === ERole.ADMIN) && (
             <>
               <Button
                 disabled={loading}
-                className={`!w-[250px] !rounded-lg`}
+                className={`md:!w-[450px] !rounded-lg flex justify-center items-center !px-5 gap-3`}
                 onClick={() => {
                   getTransactionData();
                 }}
               >
+                <DocumentDownload className={`size-6`} />
                 Export as CSV
               </Button>
               <CSVLink
@@ -254,19 +270,29 @@ export default function Property() {
                 ref={csvRef as any}
               />
             </>
-          )}
-
-          {/* Button Property */}
-          {profile?.roles.some(
-            (rows: string) => rows === ERole.LISTING_AGENT
-          ) && (
-            <Link
-              href={`/property/create`}
-              className={`w-full md:max-w-[250px] flex grow-0 body2 items-center justify-center bg-primary hover:bg-orange-700 active:bg-orange-700 text-white rounded-lg px-3 gap-2 py-2`}
-            >
-              <Add /> Create Property
-            </Link>
-          )}
+          )} */}
+            {profile?.roles.some((rows: string) => rows === ERole.ADMIN) && (
+              <>
+                <button
+                  disabled={loading}
+                  className={`text-primary hover:text-opacity-50`}
+                  onClick={() => {
+                    getTransactionData();
+                  }}
+                >
+                  <DocumentDownload className={`size-8`} />
+                </button>
+                <CSVLink
+                  style={{ height: "100%" }}
+                  data={csv ?? []}
+                  filename={`${moment(new Date()).format(
+                    "YYYY-MM-DD"
+                  )}_property-list.csv`}
+                  ref={csvRef as any}
+                />
+              </>
+            )}
+          </div>
         </div>
 
         {/* table */}
@@ -339,16 +365,9 @@ export default function Property() {
                   </>
                 ))
               ) : error ? (
-                <tr>
-                  <td
-                    className={`text-center font-semibold text-2xl py-10 `}
-                    colSpan={7}
-                  >
-                    DATA NOT FOUND
-                  </td>
-                </tr>
+                <></>
               ) : (
-                data?.map((rows: any, index: number) => (
+                data?.items.map((rows: any, index: number) => (
                   <tr
                     onClick={() => {
                       router.push(`/property/detail/${rows.id}`);
@@ -442,7 +461,8 @@ export default function Property() {
                         <div>Detail</div>
                       </button>
                       {profile?.roles.some(
-                        (rows: string) => rows === ERole.LISTING_AGENT
+                        (rows: string) =>
+                          rows === ERole.LISTING_AGENT || rows === ERole.ADMIN
                       ) &&
                         (rows.status === EStatusProperty.ASK_REVISION ||
                           rows.status === EStatusProperty.DRAFT ||
@@ -472,7 +492,7 @@ export default function Property() {
                             <div>Edit</div>
                           </button>
                         )}
-                      {profile.roles.some(
+                      {/* {profile.roles.some(
                         (rows: string) => rows === ERole.ADMIN
                       ) && (
                         <button
@@ -500,7 +520,7 @@ export default function Property() {
 
                           <div>Delete</div>
                         </button>
-                      )}
+                      )} */}
 
                       {profile?.roles.some(
                         (rows: string) => rows === ERole.ADMIN
@@ -542,6 +562,7 @@ export default function Property() {
             </tbody>
           </table>
         </div>
+        {error && <div className={`flex items-center justify-center text-xl font-bold`}>DATA NOT FOUND</div>}
         <div
           className={`flex items-center justify-center md:justify-end gap-3 px-5 pb-5`}
         >
@@ -579,7 +600,7 @@ export default function Property() {
               className={`rounded-md border border-gray-300 w-9 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
             />
             <p>Of</p>
-            <p>{100}</p>
+            <p>{data?.meta.totalPages}</p>
           </div>
 
           {/* Button Next */}
@@ -588,7 +609,7 @@ export default function Property() {
             onClick={() => {
               handleNext();
             }}
-            disabled={filter.page === 100}
+            disabled={filter.page === data?.meta.totalPages}
             className={`disabled:text-gray-200`}
           >
             <ArrowRight2 />
