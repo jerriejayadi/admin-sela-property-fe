@@ -6,6 +6,10 @@ import {
   GetUserProps,
 } from "../types/user/getUser";
 import { PostUserProps, PostUserResponseProps } from "../types/user/postUser";
+import {
+  PutAdminSelfRequestProps,
+  PutAdminSelfResponseProps,
+} from "../types/user/putAdmin";
 
 export const postLogin = (
   request: RequestLoginProps
@@ -32,4 +36,10 @@ export const getUser = (params: GetUserParams): Promise<GetUserProps> => {
 
 export const getUserById = (id: string): Promise<GetUserDetailProps> => {
   return apiClient.get(`/apis/admin/${id}`);
+};
+
+export const putAdminSelf = (
+  payload: PutAdminSelfRequestProps
+): Promise<PutAdminSelfResponseProps> => {
+  return apiClient.put(`/apis/admin/self`, payload);
 };
