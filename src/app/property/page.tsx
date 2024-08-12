@@ -71,7 +71,7 @@ export default function Property() {
 
   const handlePublishedStatus = (id: string, status: boolean) => {
     updatePublished(id, { published: !status }).then(() => {
-      fetchList({}).then((res) => setData(res.result.items));
+      fetchList({}).then((res) => setData(res.result));
     });
   };
 
@@ -86,7 +86,7 @@ export default function Property() {
     setModalApprove(false);
     putApproval(selected!, { status: "approved", note: "-" }).then(() => {
       fetchList({}).then((res) => {
-        setData(res.result.items);
+        setData(res.result);
       });
     });
   };
@@ -95,7 +95,7 @@ export default function Property() {
     setModalReject(false);
     putApproval(selected!, { status: "rejected", note: "-" }).then(() => {
       fetchList({}).then((res) => {
-        setData(res.result.items);
+        setData(res.result);
       });
     });
   };
@@ -103,7 +103,7 @@ export default function Property() {
     setModalReject(false);
     putApproval(selected!, { status: "ask_revision", note: "-" }).then(() => {
       fetchList({}).then((res) => {
-        setData(res.result.items);
+        setData(res.result);
       });
     });
   };
@@ -112,7 +112,7 @@ export default function Property() {
     setModalDelete(false);
     deleteProperty(selected!).then(() => {
       fetchList({}).then((res) => {
-        setData(res.result.items);
+        setData(res.result);
       });
     });
   };
@@ -367,7 +367,7 @@ export default function Property() {
               ) : error ? (
                 <></>
               ) : (
-                data?.items.map((rows: any, index: number) => (
+                data?.items?.map((rows: any, index: number) => (
                   <tr
                     onClick={() => {
                       router.push(`/property/detail/${rows.id}`);
@@ -562,7 +562,11 @@ export default function Property() {
             </tbody>
           </table>
         </div>
-        {error && <div className={`flex items-center justify-center text-xl font-bold`}>DATA NOT FOUND</div>}
+        {error && (
+          <div className={`flex items-center justify-center text-xl font-bold`}>
+            DATA NOT FOUND
+          </div>
+        )}
         <div
           className={`flex items-center justify-center md:justify-end gap-3 px-5 pb-5`}
         >
@@ -600,7 +604,7 @@ export default function Property() {
               className={`rounded-md border border-gray-300 w-9 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
             />
             <p>Of</p>
-            <p>{data?.meta.totalPages}</p>
+            <p>{data?.meta?.totalPages}</p>
           </div>
 
           {/* Button Next */}
@@ -609,7 +613,7 @@ export default function Property() {
             onClick={() => {
               handleNext();
             }}
-            disabled={filter.page === data?.meta.totalPages}
+            disabled={filter.page === data?.meta?.totalPages}
             className={`disabled:text-gray-200`}
           >
             <ArrowRight2 />
