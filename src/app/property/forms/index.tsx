@@ -173,6 +173,7 @@ export default function Forms({
         bedRoomsAmount: values.bedRoomsAmount.replaceAll(",", ""),
         bathRoomsAmount: values.bathRoomsAmount.replaceAll(",", ""),
         buildingSize: values.buildingSize.replaceAll(",", ""),
+        landSize: values.landSize.replaceAll(",", ""),
         carParkAmount: values.carParkAmount.replaceAll(",", ""),
         images: image,
         facilities: [],
