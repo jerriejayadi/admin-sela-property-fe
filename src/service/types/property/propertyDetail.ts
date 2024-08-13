@@ -34,6 +34,8 @@ export interface IResult {
   address: IAddress;
   images: IDetailPropertyImage[];
   googleDriveUrl: string;
+  owner:string;
+  ownerPhone:string;
 }
 
 export interface IDetailPropertyImage {

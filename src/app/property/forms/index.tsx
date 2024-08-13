@@ -178,7 +178,7 @@ export default function Forms({
         images: image,
         facilities: [],
         tags: [],
-        ownerPhone: "+62" + values.ownerPhone,
+        ownerPhone: values.ownerPhone,
       };
       onSubmit(submit);
     },
@@ -562,8 +562,6 @@ export default function Forms({
                         numberFormat(e.target.value)
                       );
                     }}
-                    withPrefix
-                    prefix="+62"
                   />
                 </div>
               </div>
