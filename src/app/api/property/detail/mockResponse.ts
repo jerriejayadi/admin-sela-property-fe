@@ -5,6 +5,8 @@ export const responseSuccess: DetailPropertyProps = {
   status: true,
   statusCode: 200,
   result: {
+    owner: "",
+    ownerPhone: "",
     title: "Villa Luxury Ubud Sangat Indah dan Nyaman Sekali WOWWW",
     propertyType: "villa",
     price: "140,000,000,000",
@@ -15,7 +17,7 @@ export const responseSuccess: DetailPropertyProps = {
     keyFeatureEn:
       "<p>Keyfeature of the product is very wow wow i like it so much hahahahahahaah</p>",
     status: EStatusProperty.APPROVED,
-    googleDriveUrl:'',
+    googleDriveUrl: "",
     published: true,
     availability: true,
     landSize: "300",
