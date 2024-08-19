@@ -13,6 +13,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { DummyProps, dummy } from "./dummy";
 import {
   currencyFormat,
+  handleNumberInput,
   myProfile,
   statusColorChip,
   translateAvailabilityProperty,
@@ -127,7 +128,7 @@ export default function Property() {
   });
 
   const handlePrevious = () => {
-    if (filter.page! < 0) {
+    if ((filter.page! as number) < 0) {
       setFilter((prev) => ({ ...prev, page: 0 }));
       setPage(page - 1);
     } else {
@@ -137,7 +138,7 @@ export default function Property() {
   };
 
   const handleNext = () => {
-    if (filter.page! >= 100!) {
+    if ((filter.page! as number) >= 100!) {
       setFilter((prev) => ({ ...prev, page: page }));
       setPage(page);
     } else {
@@ -567,56 +568,53 @@ export default function Property() {
             DATA NOT FOUND
           </div>
         )}
-        <div
-          className={`flex items-center justify-center md:justify-end gap-3 px-5 pb-5`}
-        >
-          {/* Button Previous */}
 
+        <div className={`flex w-full justify-end items-center py-3 gap-4 px-5`}>
           <button
-            onClick={() => {
-              handlePrevious();
-            }}
-            className={`disabled:text-gray-200`}
             disabled={filter.page === 1}
+            onClick={() => {
+              setFilter((prev) => ({ ...prev, page: Number(prev.page)! - 1 }));
+            }}
+            className={`disabled:text-gray-300 text-primaryText`}
           >
-            <ArrowLeft2 />
+            <ArrowLeft2 className={` size-6 shrink-0 `} />
           </button>
-
-          {/* Pagination */}
-
-          <div className={`flex items-center gap-3`}>
-            <p>Page</p>
-            <input
-              type={`number`}
-              value={page}
-              onKeyDown={(e: any) =>
-                setFilter((prev) => ({ ...prev, page: e.target.value }))
-              }
-              onBlur={(e) => {
+          <input
+            onChange={(e) => {
+              if (e.target.value === "") {
                 setFilter((prev) => ({
                   ...prev,
-                  page: Number(e.target.value),
+                  page: "",
                 }));
-              }}
-              onChange={(e) => {
-                setPage(Number(e.target.value));
-              }}
-              className={`rounded-md border border-gray-300 w-9 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-            />
-            <p>Of</p>
-            <p>{data?.meta?.totalPages}</p>
-          </div>
-
-          {/* Button Next */}
-
-          <button
-            onClick={() => {
-              handleNext();
+              } else if (Number(e.target.value) > data?.meta.totalPages!) {
+                setFilter((prev) => ({
+                  ...prev,
+                  page: data?.meta.totalPages!,
+                }));
+              } else {
+                setFilter((prev) => ({
+                  ...prev,
+                  page: Number(handleNumberInput(e.target.value)),
+                }));
+              }
             }}
-            disabled={filter.page === data?.meta?.totalPages}
-            className={`disabled:text-gray-200`}
+            onBlur={(e) => {
+              setFilter((prev) => ({ ...prev, page: Number(e.target.value) }));
+            }}
+            value={filter.page}
+            className={`w-[40px] border border-secondaryText text-center focus:outline-none focus:border-accents focus:border-2 rounded-sm`}
+            type={`text`}
+          />
+          <p>of</p>
+          <p>{data?.meta.totalPages}</p>
+          <button
+            disabled={filter.page === data?.meta.totalPages}
+            onClick={() => {
+              setFilter((prev) => ({ ...prev, page: Number(prev.page) + 1 }));
+            }}
+            className={`disabled:text-gray-300 text-primaryText`}
           >
-            <ArrowRight2 />
+            <ArrowRight2 className={`text-inherit size-6 shrink-0 `} />
           </button>
         </div>
       </div>

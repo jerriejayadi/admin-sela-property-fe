@@ -7,6 +7,8 @@ import {
   ArrowCircleRight2,
   ArrowLeft2,
   ArrowRight2,
+  Copy,
+  GoogleDrive,
   Location,
   TickCircle,
   Whatsapp,
@@ -22,10 +24,11 @@ import RichTextRender from "@/components/Atoms/RichTextPreview";
 
 import { DetailPropertyProps } from "@/service/types/property/propertyDetail";
 import { useRequest } from "ahooks";
-import { getPropertyDetail } from "@/service/api/property";
+import { getPropertyDetail, putPropertyApproval } from "@/service/api/property";
 import {
   currencyFormat,
   myProfile,
+  statusColorChip,
   statusPropertyColor,
   toTitleCase,
 } from "@/utils";
@@ -33,6 +36,10 @@ import { localStorageMixins } from "@/localStorage.mixins";
 import { IProfile } from "@/service/types/auth";
 import Button from "@/components/Atoms/Button";
 import Chip from "@/components/Atoms/Chip";
+import Input from "@/components/Atoms/Input";
+import Alert from "@/components/Atoms/Alert";
+import { EStatusProperty } from "@/service/types/property/postProperty";
+import ActionModals from "@/components/Atoms/Modals/ActionModals";
 
 const ImageList = [
   {
@@ -111,12 +118,16 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
   const router = useRouter();
 
   const [seeMorePhotos, setSeeMorePhotos] = useState<boolean>(false);
-  const { data, run, loading } = useRequest(getPropertyDetail);
+  const { data, run, loading, runAsync } = useRequest(getPropertyDetail);
   // const [data, setData] = useState<DetailPropertyProps>();
   const [selectedImage, setSelectedImage] = useState<string>(
     data?.result?.images[0]?.url!
   );
   const [current, setCurrent] = useState<number>(0);
+  const [alert, setAlert] = useState<boolean>(false);
+  const [alert2, setAlert2] = useState<boolean>(false);
+  const [modalApprove, setModalApprove] = useState<boolean>(false);
+  const [modalReject, setModalReject] = useState<boolean>(false);
 
   const previousSlide = () => {
     if (current === 0) setCurrent(data?.result.images.length! - 1);
@@ -132,44 +143,164 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
     window.open(`https://wa.me/+6281234567890`, "_blank");
   };
 
+  const handleAlert = (button: "button1" | "button2") => {
+    button === "button1" ? setAlert(true) : setAlert2(true);
+    setTimeout(() => {
+      button === "button1" ? setAlert(false) : setAlert2(false);
+    }, 3000);
+  };
+
+  const { runAsync: putApproval, loading: approvalLoading } = useRequest(
+    putPropertyApproval,
+    {
+      manual: true,
+    }
+  );
+
+  const handleApprove = () => {
+    setModalApprove(false);
+    putApproval(params.id, { status: "approved", note: "-" }).then(() => {
+      run(params.id);
+    });
+  };
+
+  const handleReject = () => {
+    setModalReject(false);
+    putApproval(params.id, { status: "rejected", note: "-" }).then(() => {
+      run(params.id);
+    });
+  };
+  const handleAskRevision = () => {
+    setModalReject(false);
+    putApproval(params.id, { status: "ask_revision", note: "-" }).then(() => {
+      run(params.id);
+    });
+  };
+
   useLayoutEffect(() => {
     run(params.id);
   }, []);
 
   return (
-    <div className={` max-w-[1150px] pb-20`}>
+    <div className={`pb-20`}>
       <div className={`mb-4`}>
         <div className={` mb-3 flex items-center`}>
           <div className={`font-montserrat font-semibold text-3xl`}>
             {data?.result.title}
           </div>
-          <div className={`ml-4`}>
-            <Chip color={statusPropertyColor(data?.result.status!)}>
-              {toTitleCase(data?.result.status as string)}
-            </Chip>
-          </div>
         </div>
-        <div className={`bg-white rounded-lg px-8 py-5`}>
-          <Button
-            className={`!w-fit rounded-lg !px-5 mr-5`}
-            onClick={() => {
-              window.navigator.clipboard.writeText(
-                data?.result.googleDriveUrl!
-              );
-            }}
+        <div className={`bg-white rounded-lg   `}>
+          <div
+            className={`px-8 py-5 border-b text-xl font-bold flex items-center justify-between`}
           >
-            Google Drive URL
-          </Button>
-          <Button
-            className={`!w-fit rounded-lg !px-5`}
-            onClick={() => {
-              window.navigator.clipboard.writeText(
-                data?.result.address.locationMaps!
-              );
-            }}
-          >
-            Location URL
-          </Button>
+            <p>Property Info</p>
+            <div className={`ml-4 font-normal text-base`}>
+              <Chip color={statusColorChip(data?.result.status!)}>
+                {toTitleCase(data?.result.status as string)}
+              </Chip>
+            </div>
+          </div>
+          <div className={`px-8 pt-5 pb-8 flex flex-col gap-4`}>
+            <div>
+              <p className={`text-xs`}>Property Number</p>
+              <p className={`font-semibold text-xl`}>
+                {data?.result.propertyNumber ?? "-"}
+              </p>
+            </div>
+            <div>
+              <p className={`text-xs`}>Owner Name</p>
+              <p className={`font-semibold text-xl`}>{data?.result.owner}</p>
+            </div>
+            <div>
+              <p className={`text-xs`}>Owner Phone</p>
+              <p className={`font-semibold text-xl`}>
+                {data?.result.ownerPhone}
+              </p>
+            </div>
+            <div>
+              <p className={`text-xs mb-1`}>Google Drive</p>
+              {/* <p className={`font-semibold line-clamp-1`}>
+              {data?.result.googleDriveUrl}
+            </p> */}
+              <Button
+                className={`w-full md:w-fit rounded-lg !px-5 !py-2 mr-5 !flex items-center justify-between`}
+                onClick={() => {
+                  window.navigator.clipboard.writeText(
+                    data?.result.googleDriveUrl!
+                  );
+                  handleAlert("button1");
+                }}
+              >
+                {/* <GoogleDrive className={`size-6 shrink-0`} />{" "} */}
+                {alert ? (
+                  <>Copied to clipboard!</>
+                ) : (
+                  <>
+                    <span className="mr-4">Google Drive URL</span>
+                    <Copy />
+                  </>
+                )}
+              </Button>
+            </div>
+            <div>
+              <p className={`text-xs mb-1`}>Location</p>
+              {/* <div
+              onClick={() => {
+                window.navigator.clipboard.writeText(
+                  data?.result.address.locationMaps!
+                );
+              }}
+              className={`flex items-center gap-2 active:underline`}
+            >
+              <p className={`font-semibold truncate`}>
+                {data?.result.address.locationMaps}
+              </p>
+              <Copy className={`size-6 shrink-0`} />
+            </div> */}
+              <Button
+                className={`w-full md:w-fit rounded-lg !px-5 !py-2 mr-5 !flex items-center justify-between`}
+                onClick={() => {
+                  window.navigator.clipboard.writeText(
+                    data?.result.googleDriveUrl!
+                  );
+                  handleAlert("button2");
+                }}
+              >
+                {alert2 ? (
+                  <>Copied to clipboard!</>
+                ) : (
+                  <>
+                    <span className="mr-4">Location URL</span>
+                    <Copy />
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+          {/* <div className={`flex`}>
+            <Button
+              className={`w-full md:w-fit rounded-lg !px-5 mr-5 !flex items-center justify-center`}
+              onClick={() => {
+                window.navigator.clipboard.writeText(
+                  data?.result.googleDriveUrl!
+                );
+              }}
+            >
+              <GoogleDrive className={`size-6 shrink-0`} />{" "}
+              <span className="hidden md:block">Google Drive URL</span>
+            </Button>
+            <Button
+              className={`w-full md:w-fit rounded-lg !px-5 flex justify-center `}
+              onClick={() => {
+                window.navigator.clipboard.writeText(
+                  data?.result.address.locationMaps!
+                );
+              }}
+            >
+              <Location className={`size-6 shrink-0`} />
+              <span className={`hidden md:block`}>Location URL</span>
+            </Button>
+          </div> */}
         </div>
       </div>
       <div className={`mb-4 w-full flex justify-between`}>
@@ -454,7 +585,73 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
         )}
 
         {/* Suggested */}
+        {/* <Alert
+          message={"Successfully copy to clipboard"}
+          isVisible={alert}
+          onClose={function (): void {
+            setAlert(false);
+          }}
+        /> */}
+        {data?.result.status === EStatusProperty.IN_REVIEW && (
+          <div
+            className={`fixed bottom-16 md:bottom-0 left-0 w-full bg-white p-3 flex items-center justify-end z-40 gap-4`}
+          >
+            <Button
+              onClick={() => {
+                setModalApprove(true);
+              }}
+              className={`md:!w-fit  !px-4 !bg-green-200 !text-green-700 !rounded-lg`}
+            >
+              Approve
+            </Button>
+            <Button
+              onClick={() => {
+                setModalReject(true);
+              }}
+              className={`md:!w-fit !px-4 !bg-red-200 !text-red-700 !rounded-lg`}
+            >
+              Reject
+            </Button>
+          </div>
+        )}
       </div>
+      <ActionModals
+        title={"Approve this Property?"}
+        onReject={function (): void {
+          setModalApprove(false);
+        }}
+        onSubmit={function (): void {
+          handleApprove();
+        }}
+        rejectButtonText="Cancel"
+        open={modalApprove}
+        onClose={function (): void {
+          setModalApprove(false);
+        }}
+      >
+        Before approving this property request, please review the details
+        carefully. Once approved, the requester will be notified, and the
+        property will be added to our system.
+      </ActionModals>
+      <ActionModals
+        title={"Reject this Property?"}
+        onReject={function (): void {
+          handleAskRevision();
+        }}
+        onSubmit={function (): void {
+          handleReject();
+        }}
+        rejectButtonText="Ask for Revision"
+        open={modalReject}
+        onClose={function (): void {
+          setModalReject(false);
+        }}
+        approveButtonText="Reject"
+      >
+        Before rejecting this property request, please review the details
+        carefully. Once rejected, the requester will be notified, and the
+        property will be added to our system.
+      </ActionModals>
     </div>
   );
 }

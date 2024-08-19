@@ -29,7 +29,7 @@ export default function ActionModals({
     <ModalsFrame open={open} onClose={onClose}>
       {icons && <div>{icons}</div>}
       <div className={`items-center flex justify-center flex-col`}>
-        <div className={`h2 font-medium font-montserrat`}>{title}</div>
+        <div className={`h2 font-medium font-montserrat text-center`}>{title}</div>
         <div className={`body1 mt-3 text-center`}>{children}</div>
       </div>
 

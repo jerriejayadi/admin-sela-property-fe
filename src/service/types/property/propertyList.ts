@@ -1,7 +1,7 @@
 export interface RequestPropertyListParamsProps {
   keyword?: string;
   propertyType?: string;
-  page?: number;
+  page?: number | "";
   limit?: number;
   availability?: string;
 }

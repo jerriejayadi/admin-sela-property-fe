@@ -4,7 +4,7 @@ export interface GetUserParams {
   keyword?: string;
   role?: string;
   limit?: number;
-  page?: number;
+  page?: number | "";
 }
 
 export interface GetUserProps {

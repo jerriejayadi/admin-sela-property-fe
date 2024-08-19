@@ -137,3 +137,22 @@ export const translateAvailabilityProperty = (data: any) => {
 export const myProfile = () => {
   return JSON.parse(localStorageMixins.get(`profile`)!);
 };
+
+export function handleNumberInput(input: string | number) {
+  let value = input;
+
+  if (typeof value === "number") {
+    value = value.toString();
+  }
+
+  // Remove non-digit characters
+  value = value.replace(/\D/g, "");
+
+  // Remove leading zeros
+  if (value.startsWith("0") && value.length > 1) {
+    value = value.replace(/^0+/, "");
+  }
+
+  // Update the input field with the sanitized value
+  return value;
+}

@@ -5,6 +5,7 @@ export const responseSuccess: DetailPropertyProps = {
   status: true,
   statusCode: 200,
   result: {
+    propertyNumber: "",
     owner: "",
     ownerPhone: "",
     title: "Villa Luxury Ubud Sangat Indah dan Nyaman Sekali WOWWW",
