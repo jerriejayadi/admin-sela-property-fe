@@ -228,6 +228,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
                   window.navigator.clipboard.writeText(
                     data?.result.googleDriveUrl!
                   );
+                  window.open(data?.result.googleDriveUrl, "_blank");
                   handleAlert("button1");
                 }}
               >
@@ -261,8 +262,9 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
                 className={`w-full md:w-fit rounded-lg !px-5 !py-2 mr-5 !flex items-center justify-between`}
                 onClick={() => {
                   window.navigator.clipboard.writeText(
-                    data?.result.googleDriveUrl!
+                    data?.result.address.locationMaps!
                   );
+                  window.open(data?.result.address.locationMaps, "_blank");
                   handleAlert("button2");
                 }}
               >
