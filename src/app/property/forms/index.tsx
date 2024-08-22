@@ -21,6 +21,8 @@ import Image from "next/image";
 import { ERole } from "@/service/types/user/postUser";
 import { EPropertyType } from "@/service/types/property/EPropertyType";
 import { PropertyType } from "@/utils/propertyType";
+import { useRequest } from "ahooks";
+import { getCurrencyList } from "@/service/api/currency";
 
 interface IImage extends IDetailPropertyImage {
   file?: string;
@@ -43,6 +45,7 @@ export default function Forms({
     propertyType: EPropertyType.HOUSE,
     price: "",
     // description: [{ title: "", description: "Hello World" }],
+    currency: "IDR",
     googleDriveUrl: "",
     descriptionEn: "",
     keyFeatureEn: "",
@@ -187,6 +190,8 @@ export default function Forms({
     enableReinitialize: true,
   });
   const [image, setBannerImage] = useState<IImage[]>([]);
+
+  const { run: getCurrency, data: currencyList } = useRequest(getCurrencyList);
 
   return (
     <form
@@ -374,7 +379,22 @@ export default function Forms({
               errorMessage={formik.touched.price && formik.errors.price}
               value={formik.values.price}
               withPrefix
-              prefix={"Rp"}
+              prefixLabel={
+                <select
+                  value={formik.values.currency}
+                  onChange={(e) => {
+                    formik.setFieldValue("currency", e.target.value);
+                  }}
+                >
+                  {currencyList?.result
+                    .sort((a, b) => a.id.localeCompare(b.id))
+                    .map((rows, index) => (
+                      <option key={`currency-${index}`} value={rows.id}>
+                        {rows.id}
+                      </option>
+                    ))}
+                </select>
+              }
               id={"price"}
               name={"price"}
               placeholder={"Enter your Property Price"}

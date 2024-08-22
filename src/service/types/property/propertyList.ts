@@ -28,8 +28,14 @@ export interface IPropertyList {
   buildSize: string | number;
   status: string;
   published: boolean;
+  currency: ICurrency;
+  currencyId: string;
 }
 
+export interface ICurrency {
+  id: string;
+  symbolNative: string;
+}
 export interface IImages {
   type: string;
   url: string;

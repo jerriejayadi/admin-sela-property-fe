@@ -22,6 +22,11 @@ export const responseSuccess: ResponsePropertyProps = {
             url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
           },
         ],
+        currency: {
+          id: "",
+          symbolNative: "",
+        },
+        currencyId: "",
       },
       {
         id: "",
@@ -40,6 +45,11 @@ export const responseSuccess: ResponsePropertyProps = {
             url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
           },
         ],
+        currency: {
+          id: "",
+          symbolNative: "",
+        },
+        currencyId: "",
       },
       {
         id: "",
@@ -58,6 +68,11 @@ export const responseSuccess: ResponsePropertyProps = {
             url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
           },
         ],
+        currency: {
+          id: "",
+          symbolNative: "",
+        },
+        currencyId: "",
       },
       {
         id: "",
@@ -76,6 +91,11 @@ export const responseSuccess: ResponsePropertyProps = {
             url: '"https://firebasestorage.googleapis.com/v0/b/learn-firebase-b3cf6.appspot.com/o/G0pmlEn1CkiRjDpoVoFD6.jpeg?alt=media&token=8d129852-bf8f-4bbe-a48b-9494d0bd438a"',
           },
         ],
+        currency: {
+          id: "",
+          symbolNative: "",
+        },
+        currencyId: "",
       },
     ],
     meta: {

@@ -397,7 +397,8 @@ export default function Property() {
                     <td className={`px-3 py-2 `}>{rows.propertyType}</td>
 
                     <td className={`px-3 py-2  truncate`}>
-                      Rp{currencyFormat(rows.price)}
+                      {rows?.currency?.symbolNative ?? 'Rp'}
+                      {currencyFormat(rows.price)}
                     </td>
                     <td className={`px-3 py-2  `}>
                       {translateAvailabilityProperty(rows)}

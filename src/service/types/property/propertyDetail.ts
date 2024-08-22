@@ -1,4 +1,5 @@
 import { EStatusProperty } from "./postProperty";
+import { ICurrency } from "./propertyList";
 
 export interface DetailPropertyProps {
   status: boolean;
@@ -37,6 +38,8 @@ export interface IResult {
   owner: string;
   ownerPhone: string;
   propertyNumber: string;
+  currency: ICurrency;
+  currencyId: string;
 }
 
 export interface IDetailPropertyImage {

@@ -5,6 +5,11 @@ export const responseSuccess: DetailPropertyProps = {
   status: true,
   statusCode: 200,
   result: {
+    currency: {
+      id: "",
+      symbolNative: "",
+    },
+    currencyId: "",
     propertyNumber: "",
     owner: "",
     ownerPhone: "",

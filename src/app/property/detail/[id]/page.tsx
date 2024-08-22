@@ -362,7 +362,8 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
             <div
               className={`font-montserrat font-bold text-xl md:text-4xl mt-1 md:mt-7`}
             >
-              IDR {currencyFormat(data?.result.price ?? 0)}
+              {data?.result.currencyId ?? "IDR"}{" "}
+              {currencyFormat(data?.result.price ?? 0)}
             </div>
             <div
               className={`font-montserrat font-semibold text-4xl md:text-6xl md:mt-2`}

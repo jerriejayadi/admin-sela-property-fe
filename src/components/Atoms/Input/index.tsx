@@ -2,7 +2,7 @@ import { ChangeEvent, InputHTMLAttributes } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string | false;
-  prefix?: string;
+  prefixLabel?: React.ReactNode;
   labelClassName?: string;
   className?: string;
   label: string;
@@ -15,7 +15,7 @@ export default function Input({
   className,
   label,
   withPrefix = false,
-  prefix,
+  prefixLabel,
   actionButton,
   ...props
 }: InputProps) {
@@ -31,7 +31,9 @@ export default function Input({
           withPrefix && "border border-gray-300 rounded-lg "
         } `}
       >
-        {withPrefix && <div className={`pr-3 text-gray-400 `}>{prefix}</div>}
+        {withPrefix && (
+          <div className={`pr-3 text-gray-400 `}>{prefixLabel}</div>
+        )}
         <input
           {...props}
           className={`bg-[#fcfcfc] py-3 ${

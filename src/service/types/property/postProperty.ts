@@ -5,6 +5,7 @@ export interface PostPropertyProps {
   title: string;
   propertyType: EPropertyType;
   price: string;
+  currency: string;
   googleDriveUrl: string;
   descriptionEn: string;
   keyFeatureEn: string;

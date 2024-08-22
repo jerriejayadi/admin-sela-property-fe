@@ -93,6 +93,7 @@ export default function EditProperty({ params }: EditPropertyParams) {
       carParkAmount: data?.result.carParkAmount.toString(),
       price: currencyFormat(data?.result.price ?? 0),
       googleDriveUrl: data?.result.googleDriveUrl,
+      currency: data?.result.currencyId,
     };
     setManagedInitialValue(temp as any);
   };
