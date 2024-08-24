@@ -3,6 +3,7 @@ import { Inter, Lato, Montserrat } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import Layout from "@/components/layouts/Layout";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,9 +32,11 @@ export default function RootLayout({
       <body
         className={`${inter.className} ${montserrat.variable} ${lato.variable} bg-[#F0F0F0]`}
       >
-        <Layout>
-          <div>{children}</div>
-        </Layout>
+        <GoogleOAuthProvider clientId={"771963944350-kq86tumrbh49irvbpq3h15bdki0rm9qo.apps.googleusercontent.com"}>
+          <Layout>
+            <div>{children}</div>
+          </Layout>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

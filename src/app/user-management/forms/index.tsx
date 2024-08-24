@@ -28,7 +28,7 @@ export default function UserForms({
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<PostUserProps>({
     email: "",
-    password: "",
+    password: "defaultPassword!123",
     name: "",
     roles: [],
     status: EUserStatus.active,
@@ -105,7 +105,7 @@ export default function UserForms({
             />
           </div>
 
-          <div className={`flex items-center justify-center`}>
+          {/* <div className={`flex items-center justify-center`}>
             <Input
               disabled={isLoading}
               onChange={formik.handleChange}
@@ -127,7 +127,7 @@ export default function UserForms({
                 </button>
               }
             />
-          </div>
+          </div> */}
 
           {/* <div className={`text-sm`}>
             <div className="font-montserrat body1 mb-3 body2">Role</div>

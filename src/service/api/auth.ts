@@ -1,5 +1,5 @@
 import apiClient from ".";
-import { IResult, RequestLoginProps, ResponseLoginProps } from "../types/auth";
+import { IResult, LoginGoogleProps, RequestLoginProps, ResponseLoginProps } from "../types/auth";
 import {
   GetUserDetailProps,
   GetUserParams,
@@ -15,6 +15,10 @@ export const postLogin = (
   request: RequestLoginProps
 ): Promise<ResponseLoginProps> => {
   return apiClient.post(`/apis/admin/login`, request);
+};
+
+export const PostLoginGoogle = (payload: LoginGoogleProps): Promise<any> => {
+  return apiClient.post(`/apis/admin/login/google`, payload);
 };
 
 export const postUser = (

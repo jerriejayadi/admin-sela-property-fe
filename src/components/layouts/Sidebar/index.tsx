@@ -84,10 +84,10 @@ export default function Sidebar({ children }: SideBarProps) {
             >
               <Image
                 className={`w-8 h-8 text-black object-contain`}
-                src={"/images/sela-logo-black.png"}
+                src={"/images/sela-logo.svg"}
                 alt={``}
-                width={74}
-                height={48}
+                width={1000}
+                height={1000}
               />
 
               <div className={`font-audrey md:text-xl text-base`}>

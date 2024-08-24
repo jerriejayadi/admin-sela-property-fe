@@ -11,6 +11,10 @@ export interface ResponseLoginProps {
   result: IResult;
 }
 
+export interface LoginGoogleProps {
+  token: string;
+}
+
 export interface IResult {
   profile: IProfile;
   access_token: string;

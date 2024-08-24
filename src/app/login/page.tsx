@@ -1,8 +1,12 @@
 "use client";
+import FeedbackModals from "@/components/Atoms/Modals/FeedbackModals";
 import { localStorageMixins } from "@/localStorage.mixins";
-import { postLogin } from "@/service/api/auth";
+import { postLogin, PostLoginGoogle } from "@/service/api/auth";
+import { useGoogleLogin } from "@react-oauth/google";
 import { useRequest } from "ahooks";
-import { CloseCircle } from "iconsax-react";
+import { AxiosError } from "axios";
+import { CloseCircle, Google, Warning2 } from "iconsax-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -18,6 +22,9 @@ export default function Login() {
     password: "",
   });
   const [error, setError] = useState<boolean>(false);
+  const [access_token, setAccessToken] = useState<string>("");
+  const [failedModal, setFailedModal] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<AxiosError | any>();
 
   const { runAsync, loading } = useRequest(postLogin, { manual: true });
 
@@ -35,11 +42,43 @@ export default function Login() {
       });
   };
 
-  // useEffect(() => {
-  //   if (localStorageMixins.get(`access_token`)) {
-  //     router.push("/");
-  //   }
-  // }, []);
+  const googleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      onSuccessGoogleLogin(tokenResponse);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+    onNonOAuthError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const onSuccessGoogleLogin = async (googleResponse: any) => {
+    try {
+      // code request to backend
+      const tokenGoogle = googleResponse?.access_token;
+      PostLoginGoogle({ token: tokenGoogle })
+        .then((res) => {
+          localStorageMixins.set("access_token", res.result.access_token);
+          localStorageMixins.set("profile", res.result.profile);
+          setAccessToken(res.result.access_token);
+        })
+        .catch((error) => {
+          console.log(error);
+          setFailedModal(true);
+          setErrorMessage(error);
+        });
+    } catch (error) {
+      // catch some error
+    }
+  };
+
+  useEffect(() => {
+    if (localStorageMixins.get(`access_token`)) {
+      router.push("/");
+    }
+  }, [access_token]);
   return (
     <div className={`flex items-center justify-center   w-full h-screen`}>
       <div
@@ -102,10 +141,55 @@ export default function Login() {
               >
                 Login
               </button>
+              <div className="relative flex items-center py-4">
+                <div className="flex-grow border-t border-gray-400"></div>
+                <span className="flex-shrink mx-4 text-gray-400">or</span>
+                <div className="flex-grow border-t border-gray-400"></div>
+              </div>
+
+              <button
+                type={`button`}
+                onClick={() => {
+                  googleLogin();
+                }}
+                className={`w-full flex items-center justify-center border rounded-md border-gray-300 px-3 py-2 gap-4 active:brightness-90 `}
+              >
+                <Image
+                  alt={`google-icons`}
+                  src={`/icons/google.png`}
+                  width={1000}
+                  height={1000}
+                  className={`size-5`}
+                />{" "}
+                Sign in with Google
+              </button>
             </div>
           </div>
         </form>
       </div>
+      <FeedbackModals
+        icons={<Warning2 className={`size-20`} />}
+        title={"Failed to Login"}
+        open={failedModal}
+        onClose={function (): void {
+          setFailedModal(false);
+        }}
+        actionText="Try Again"
+        onAction={() => {
+          setFailedModal(false);
+        }}
+      >
+        <p>
+          {errorMessage?.response?.status} -{" "}
+          {errorMessage?.response?.data?.message}
+        </p>
+        <p className={`mt-1`}>
+          {errorMessage?.response.status === 401 &&
+            "Your email may be not registered. Contact the Admin for further information"}
+          {errorMessage?.response.status === 500 &&
+            "There is an error on our side. Please try again later!"}
+        </p>
+      </FeedbackModals>
     </div>
   );
 }

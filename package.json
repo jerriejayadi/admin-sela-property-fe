@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
     "@tiptap/extension-bullet-list": "^2.4.0",
     "@tiptap/extension-heading": "^2.4.0",
     "@tiptap/extension-list-item": "^2.4.0",
