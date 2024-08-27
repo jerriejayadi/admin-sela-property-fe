@@ -8,7 +8,7 @@ import { localStorageMixins } from "@/localStorage.mixins";
 import { putAdminSelf } from "@/service/api/auth";
 import { ERole } from "@/service/types/user/postUser";
 import { PutAdminSelfRequestProps } from "@/service/types/user/putAdmin";
-import { myProfile, toTitleCase } from "@/utils";
+import { getInitialFromName, myProfile, toTitleCase } from "@/utils";
 import { useRequest } from "ahooks";
 import { error } from "console";
 import { useFormik } from "formik";
@@ -87,13 +87,32 @@ export default function Profile() {
           <div className={` font-medium body1`}>Profile</div>
           <div className={`body3 text-gray-400 mt-1`}>Update your Profile</div>
         </div>
-        <form
+        <div
+          className={`py-6 flex flex-col items-center justify-center gap-4 md:flex-row md:justify-start`}
+        >
+          <div
+            className={`size-20 bg-black text-white flex items-center justify-center rounded-[100%]  mx-auto md:mx-0 text-2xl`}
+          >
+            {getInitialFromName(profile.name)}
+          </div>
+          <div className={`text-center md:text-left`}>
+            <p className={`md:text-2xl md:font-semibold`}>{profile.name}</p>
+            <p className={`text-sm text-gray-400 `}>{profile.email}</p>
+            <p className={`text-sm mt-2`}>
+              Role: {'  '}
+              {profile.roles.map((rows: ERole[], index: number) => (
+                <span key={`roles-${index}`}>{rows}</span>
+              ))}
+            </p>
+          </div>
+        </div>
+        {/* <form
           onSubmit={formik.handleSubmit}
           className={`bg-white  pt-5 flex flex-col gap-4`}
         >
           <div className={`flex justify-center gap-4`}>
             <Input
-              disabled={loading}
+              disabled={true}
               onChange={formik.handleChange}
               value={formik.values.name}
               errorMessage={formik.errors.name}
@@ -105,7 +124,7 @@ export default function Profile() {
           </div>
           <div className={`flex items-center justify-center`}>
             <Input
-              disabled={loading}
+              disabled={true}
               value={formik.values.email}
               onChange={formik.handleChange}
               errorMessage={formik.errors.email}
@@ -118,7 +137,7 @@ export default function Profile() {
 
           <div className={`flex items-center justify-center`}>
             <Input
-              disabled={loading}
+              disabled={true}
               onChange={formik.handleChange}
               value={formik.values.password}
               name={`password`}
@@ -140,7 +159,7 @@ export default function Profile() {
             />
           </div>
 
-          {/* <div className={`text-sm`}>
+          <div className={`text-sm`}>
             <div className="font-montserrat body1 mb-3 body2">Role</div>
             <select
               disabled={false}
@@ -158,12 +177,12 @@ export default function Profile() {
             {formik.errors.role && (
               <div className={`text-red-500 text-sm`}>{formik.errors.role}</div>
             )}
-          </div> */}
+          </div>
 
           <Button type={`submit`} isLoading={loading}>
             Submit{" "}
           </Button>
-        </form>
+        </form> */}
       </div>
 
       <ActionModals

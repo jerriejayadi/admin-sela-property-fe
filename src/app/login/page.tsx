@@ -86,10 +86,16 @@ export default function Login() {
       >
         <form className="w-full">
           <div
-            className={`flex flex-col gap-10 p-6 bg-white rounded-lg shadow-lg w-full`}
+            className={`flex flex-col gap-6 p-6 bg-white rounded-lg shadow-lg w-full`}
           >
-            <div className={`text-3xl text-center`}>Login</div>
-            <div className={`flex flex-col gap-3`}>
+            <div>
+              <p className={`text-3xl`}>Login</p>
+              <p className={`text-lg mt-2 text-gray-400`}>
+                Login to Sela Admin Dashboard
+              </p>
+            </div>
+
+            {/* <div className={`flex flex-col gap-3`}>
               <div className="flex flex-col gap-2">
                 <label htmlFor={`email`}>Email</label>
                 <input
@@ -124,14 +130,14 @@ export default function Login() {
                 <div
                   className={`flex items-center gap-2   text-red-500 rounded-lg px-2`}
                 >
-                  {/* <CloseCircle /> */}
+                  <CloseCircle />
                   Invalid Email/Password
                 </div>
               )}
-            </div>
+            </div> */}
 
             <div>
-              <button
+              {/* <button
                 disabled={loading}
                 onClick={(e) => {
                   e.preventDefault();
@@ -145,22 +151,23 @@ export default function Login() {
                 <div className="flex-grow border-t border-gray-400"></div>
                 <span className="flex-shrink mx-4 text-gray-400">or</span>
                 <div className="flex-grow border-t border-gray-400"></div>
-              </div>
+              </div> */}
 
               <button
                 type={`button`}
                 onClick={() => {
                   googleLogin();
                 }}
-                className={`w-full flex items-center justify-center border rounded-md border-gray-300 px-3 py-2 gap-4 active:brightness-90 `}
+                className={`w-full flex items-center justify-center rounded-md  px-3 py-2 gap-4 bg-primary text-white border border-primary active:brightness-90 md:hover:brightness-90 transition-all duration-150`}
               >
-                <Image
+                {/* <Image
                   alt={`google-icons`}
                   src={`/icons/google.png`}
                   width={1000}
                   height={1000}
-                  className={`size-5`}
-                />{" "}
+                  className={`size-8 bg-white rounded-md p-1`}
+                />{" "} */}
+                <Google variant={`Bold`} />
                 Sign in with Google
               </button>
             </div>
