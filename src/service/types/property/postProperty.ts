@@ -26,6 +26,10 @@ export interface PostPropertyProps {
   sellingType?: string;
   owner: string;
   ownerPhone: string;
+  tags?: ITags[];
+}
+export interface ITags {
+  name: string;
 }
 
 export enum EStatusProperty {

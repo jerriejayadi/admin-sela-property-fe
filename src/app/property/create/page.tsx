@@ -77,6 +77,7 @@ export default function CreateProperty() {
     owner: "",
     ownerPhone: "",
     currency: "",
+    tags: [],
   });
 
   const [bannerImage, setBannerImage] = useState<IImage[]>([]);
