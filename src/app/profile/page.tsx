@@ -28,8 +28,8 @@ export default function Profile() {
   const router = useRouter();
   const profile = myProfile();
   const [initialValues, setInitialValues] = useState<PutAdminSelfRequestProps>({
-    name: profile?.name,
-    email: profile?.email,
+    name: profile?.name ?? "",
+    email: profile?.email ?? "",
     password: "",
   });
   const [submittedData, setSubmittedData] =
@@ -58,7 +58,7 @@ export default function Profile() {
           email: res.result.email,
           roles: res.result.roles,
           id: res.result.id,
-          name: res.result.name,
+          name: res.result.name ?? '',
           status: res.result.status,
         });
         setModalSuccess(true);
@@ -93,14 +93,16 @@ export default function Profile() {
           <div
             className={`size-20 bg-black text-white flex items-center justify-center rounded-[100%]  mx-auto md:mx-0 text-2xl`}
           >
-            {getInitialFromName(profile.name)}
+            {getInitialFromName(profile?.name ?? "")}
           </div>
           <div className={`text-center md:text-left`}>
-            <p className={`md:text-2xl md:font-semibold`}>{profile.name ?? ''}</p>
-            <p className={`text-sm text-gray-400 `}>{profile.email ?? ''}</p>
+            <p className={`md:text-2xl md:font-semibold`}>
+              {profile?.name ?? ""}
+            </p>
+            <p className={`text-sm text-gray-400 `}>{profile?.email ?? ""}</p>
             <p className={`text-sm mt-2`}>
-              Role: {'  '}
-              {profile.roles.map((rows: ERole[], index: number) => (
+              Role: {"  "}
+              {profile?.roles?.map((rows: ERole[], index: number) => (
                 <span key={`roles-${index}`}>{rows}</span>
               ))}
             </p>
