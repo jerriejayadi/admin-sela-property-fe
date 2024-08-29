@@ -96,8 +96,8 @@ export default function Profile() {
             {getInitialFromName(profile.name)}
           </div>
           <div className={`text-center md:text-left`}>
-            <p className={`md:text-2xl md:font-semibold`}>{profile.name}</p>
-            <p className={`text-sm text-gray-400 `}>{profile.email}</p>
+            <p className={`md:text-2xl md:font-semibold`}>{profile.name ?? ''}</p>
+            <p className={`text-sm text-gray-400 `}>{profile.email ?? ''}</p>
             <p className={`text-sm mt-2`}>
               Role: {'  '}
               {profile.roles.map((rows: ERole[], index: number) => (
