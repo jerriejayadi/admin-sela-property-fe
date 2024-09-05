@@ -397,7 +397,7 @@ export default function Property() {
                     <td className={`px-3 py-2 `}>{rows.propertyType}</td>
 
                     <td className={`px-3 py-2  truncate`}>
-                      {rows?.currency?.symbolNative ?? 'Rp'}
+                      {rows?.currency?.symbolNative ?? "Rp"}
                       {currencyFormat(rows.price)}
                     </td>
                     <td className={`px-3 py-2  `}>
