@@ -32,7 +32,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} ${montserrat.variable} ${lato.variable} bg-[#F0F0F0]`}
       >
-        <GoogleOAuthProvider clientId={"771963944350-kq86tumrbh49irvbpq3h15bdki0rm9qo.apps.googleusercontent.com"}>
+        <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID ?? ""}>
           <Layout>
             <div>{children}</div>
           </Layout>
