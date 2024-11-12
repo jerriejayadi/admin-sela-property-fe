@@ -33,7 +33,6 @@ export default function TipTap({ value, onChange, className }: TipTapProps) {
     },
     onUpdate({ editor }) {
       onChange && onChange(editor.getHTML());
-      // console.log(editor.getJSON());
     },
   });
 

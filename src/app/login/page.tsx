@@ -31,13 +31,11 @@ export default function Login() {
   const handleLogin = () => {
     runAsync(login)
       .then((res) => {
-        console.log(res);
         localStorageMixins.set("access_token", res.result.access_token);
         localStorageMixins.set("profile", res.result.profile);
         router.push("/");
       })
       .catch((err) => {
-        console.log(err);
         setError(true);
       });
   };
@@ -45,12 +43,6 @@ export default function Login() {
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       onSuccessGoogleLogin(tokenResponse);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-    onNonOAuthError: (err) => {
-      console.log(err);
     },
   });
 
@@ -65,7 +57,6 @@ export default function Login() {
           setAccessToken(res.result.access_token);
         })
         .catch((error) => {
-          console.log(error);
           setFailedModal(true);
           setErrorMessage(error);
         });

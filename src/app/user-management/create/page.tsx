@@ -29,10 +29,6 @@ export default function CreateUser() {
       });
   };
 
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
-
   return (
     <div className={``}>
       <div className={`font-inter font-semibold h2 mb-6 text-black`}>

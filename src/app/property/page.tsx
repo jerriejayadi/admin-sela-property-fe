@@ -49,10 +49,10 @@ import { PropertyType } from "@/utils/propertyType";
 import moment from "moment";
 
 export default function Property() {
-  const profile = myProfile();
   const router = useRouter();
 
   const [pagination, setPagination] = useState<number>(1);
+  const [profile, setProfile] = useState<IProfile>();
   const [data, setData] = useState<any>();
   const [csv, setCSV] = useState<any>();
   const [selected, setSelected] = useState<string>();
@@ -177,6 +177,10 @@ export default function Property() {
   const getTransactionData = async () => {
     csvRef?.current?.link?.click();
   };
+
+  useEffect(() => {
+    setProfile(myProfile());
+  }, []);
   return (
     <div className={`text-black flex flex-col gap-6 pb-20`}>
       {/* Table */}
@@ -247,7 +251,7 @@ export default function Property() {
                 href={`/property/create`}
                 className={`w-fit flex grow-0 body2 items-center justify-center bg-primary hover:bg-orange-700 active:bg-orange-700 text-white rounded-lg px-3 gap-2 py-2`}
               >
-                <Add className={`shrink-0`} /> Create Property
+                <Add className={`shrink-0`} /> <p>Create Property</p>
               </Link>
             )}
             {/* {profile?.roles.some((rows: string) => rows === ERole.ADMIN) && (
@@ -325,45 +329,43 @@ export default function Property() {
             <tbody>
               {loading ? (
                 [0, 1, 2].map((rows) => (
-                  <>
-                    <tr>
-                      <td className={` pl-4 md:pl-8 pr-4 py-1`}>
-                        <div
-                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
-                        />
-                      </td>
-                      <td className={`w-[100px] px-3 py-2 `}>
-                        <div
-                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
-                        />
-                      </td>
-                      <td className={`w-[100px] px-3 py-2 `}>
-                        <div
-                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
-                        />
-                      </td>
-                      <td className={`w-[100px] px-3 py-2 `}>
-                        <div
-                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
-                        />
-                      </td>
-                      <td className={`w-[100px] px-3 py-2 `}>
-                        <div
-                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
-                        />
-                      </td>
-                      <td className={`w-[100px] px-3 py-2 `}>
-                        <div
-                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
-                        />
-                      </td>
-                      <td className={`w-[100px] px-3 py-2 `}>
-                        <div
-                          className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
-                        />
-                      </td>
-                    </tr>
-                  </>
+                  <tr key={`skeleton-${rows}`}>
+                    <td className={` pl-4 md:pl-8 pr-4 py-1`}>
+                      <div
+                        className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                      />
+                    </td>
+                    <td className={`w-[100px] px-3 py-2 `}>
+                      <div
+                        className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                      />
+                    </td>
+                    <td className={`w-[100px] px-3 py-2 `}>
+                      <div
+                        className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                      />
+                    </td>
+                    <td className={`w-[100px] px-3 py-2 `}>
+                      <div
+                        className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                      />
+                    </td>
+                    <td className={`w-[100px] px-3 py-2 `}>
+                      <div
+                        className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                      />
+                    </td>
+                    <td className={`w-[100px] px-3 py-2 `}>
+                      <div
+                        className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                      />
+                    </td>
+                    <td className={`w-[100px] px-3 py-2 `}>
+                      <div
+                        className={`rounded-lg w-full md:w-[50%] h-[30px] bg-gradient-to-r from-gray-200 to-gray-500 animate-pulse`}
+                      />
+                    </td>
+                  </tr>
                 ))
               ) : error ? (
                 <></>
@@ -373,7 +375,7 @@ export default function Property() {
                     onClick={() => {
                       router.push(`/property/detail/${rows.id}`);
                     }}
-                    key={index}
+                    key={`property-${index}`}
                     className={`border-b border-[#E5E5E5] hover:bg-gray-100 bg-white`}
                   >
                     <td
@@ -381,7 +383,7 @@ export default function Property() {
                     >
                       <Image
                         alt={""}
-                        src={rows.images[0]?.url ?? ""}
+                        src={rows.images[0]?.url ?? "/"}
                         loader={({ src }) => src}
                         width={300}
                         height={300}
@@ -460,7 +462,7 @@ export default function Property() {
                             d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                           />
                         </svg>
-                        <div>Detail</div>
+                        <p>Detail</p>
                       </button>
                       {profile?.roles.some(
                         (rows: string) =>
@@ -491,10 +493,10 @@ export default function Property() {
                                 d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
                               />
                             </svg>
-                            <div>Edit</div>
+                            <p>Edit</p>
                           </button>
                         )}
-                      {profile.roles.some(
+                      {profile?.roles.some(
                         (rows: string) => rows === ERole.ADMIN
                       ) &&
                         rows.status === EStatusProperty.REJECTED && (
@@ -521,7 +523,7 @@ export default function Property() {
                               />
                             </svg>
 
-                            <div>Delete</div>
+                            <p>Delete</p>
                           </button>
                         )}
 
@@ -540,7 +542,7 @@ export default function Property() {
                               className={`flex items-center gap-2 mt-2 hover:text-primary`}
                             >
                               <TickCircle className="size-6" />
-                              <div>Approve</div>
+                              <p>Approve</p>
                             </button>
                             <button
                               onClick={(e) => {
@@ -553,7 +555,7 @@ export default function Property() {
                             >
                               <CloseCircle className="size-6" />
 
-                              <div>Reject</div>
+                              <p>Reject</p>
                             </button>
                           </>
                         )}

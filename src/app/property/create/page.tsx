@@ -92,7 +92,6 @@ export default function CreateProperty() {
   });
   const handleSubmit = () => {
     setModalSubmit(false);
-    // console.log(submittedData!);
 
     runAsync(submittedData!)
       .then(() => {
@@ -103,9 +102,6 @@ export default function CreateProperty() {
       });
   };
 
-  useEffect(() => {
-    console.log(bannerImage);
-  }, [bannerImage]);
   return (
     <div className={``}>
       <div className={`font-inter font-semibold h2 mb-6 text-black`}>
