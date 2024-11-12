@@ -25,13 +25,9 @@ export default function UploadImage({
   //   onFinishUpload!(imageUrl);
   // }, []);
 
-  useEffect(() => {
-    // console.log("renders");
-    // handleFiles();
-  }, [file]);
   return (
     <div>
-      {url!.length>0 ? (
+      {url!.length > 0 ? (
         <div className={`relative`}>
           <Image
             onClick={() => {

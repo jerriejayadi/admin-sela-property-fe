@@ -82,7 +82,6 @@ export const statusColorChip = (status: string) => {
 export const getInitialFromName = (name: string) => {
   let nameArray = name?.split(" ");
   nameArray = nameArray?.map((rows) => rows.charAt(0).toUpperCase());
-  console.log(nameArray);
   return nameArray?.join("");
 };
 

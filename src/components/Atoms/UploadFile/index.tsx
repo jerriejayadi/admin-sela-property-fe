@@ -21,7 +21,6 @@ export default function UploadFile({ id, onChange }: UploadFileProps) {
     setDragged(false);
     e.preventDefault();
     e.stopPropagation();
-    console.log(e.dataTransfer);
     onChange({ ...e, target: e.dataTransfer });
   };
 

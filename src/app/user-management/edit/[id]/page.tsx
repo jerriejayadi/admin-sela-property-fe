@@ -38,7 +38,7 @@ export default function EditUser({ params }: EditUserParams) {
 
   const handleSubmit = (values: PostUserProps) => {
     setModalSubmit(false);
-    console.log(values);
+
     runAsync(params.id, values).then((res) => {
       setModalSuccess(true);
     });
