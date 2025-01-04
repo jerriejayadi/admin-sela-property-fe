@@ -147,6 +147,16 @@ export default function Property() {
     }
   };
 
+  const handleFetch = () => {
+    fetchList(filter).then((res) => {
+      setData(res.result);
+      fetchList({ ...filter, limit: 9999, page:1 }).then((res) => {
+        manageCSVData(res.result.items);
+      });
+    });
+
+  };
+
   const manageCSVData = (data: any) => {
     let temp = data.map((rows: any) => ({
       propertyNumber: rows.propertyNumber,
@@ -163,10 +173,7 @@ export default function Property() {
   };
 
   useEffect(() => {
-    fetchList(filter).then((res) => {
-      setData(res.result);
-      manageCSVData(res.result.items);
-    });
+    handleFetch();
   }, [filter]);
 
   // CSV
