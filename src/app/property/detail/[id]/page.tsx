@@ -126,6 +126,7 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
   const [current, setCurrent] = useState<number>(0);
   const [alert, setAlert] = useState<boolean>(false);
   const [alert2, setAlert2] = useState<boolean>(false);
+  const [alert3, setAlert3] = useState<boolean>(false);
   const [modalApprove, setModalApprove] = useState<boolean>(false);
   const [modalReject, setModalReject] = useState<boolean>(false);
 
@@ -147,6 +148,13 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
     button === "button1" ? setAlert(true) : setAlert2(true);
     setTimeout(() => {
       button === "button1" ? setAlert(false) : setAlert2(false);
+    }, 3000);
+  };
+
+  const handleAlert2 = () => {
+    setAlert3(true);
+    setTimeout(() => {
+      setAlert3(false);
     }, 3000);
   };
 
@@ -184,10 +192,35 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
   return (
     <div className={`pb-20`}>
       <div className={`mb-4`}>
-        <div className={` mb-3 flex items-center`}>
+        <div className={` mb-3 flex items-center gap-2`}>
           <div className={`font-montserrat font-semibold text-3xl`}>
             {data?.result.title}
           </div>
+          <button
+            className="hover:bg-gray-200 rounded-full p-2"
+            onClick={() => {
+              window.navigator.clipboard.writeText(
+                `https://www.selaproperty.com/en/property/detail/${data?.result.id}`
+              );
+              handleAlert2();
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="lucide lucide-clipboard"
+            >
+              <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+            </svg>
+          </button>
         </div>
         <div className={`bg-white rounded-lg   `}>
           <div
@@ -588,13 +621,13 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
         )}
 
         {/* Suggested */}
-        {/* <Alert
+        <Alert
           message={"Successfully copy to clipboard"}
-          isVisible={alert}
+          isVisible={alert || alert2 || alert3}
           onClose={function (): void {
             setAlert(false);
           }}
-        /> */}
+        />
         {data?.result.status === EStatusProperty.IN_REVIEW && (
           <div
             className={`fixed bottom-16 md:bottom-0 left-0 w-full bg-white p-3 flex items-center justify-end z-40 gap-4`}
