@@ -3,21 +3,24 @@ import { EStatusProperty } from "@/service/types/property/postProperty";
 import { IResult } from "@/service/types/property/propertyList";
 import { useState, useRef, useEffect } from "react";
 
-export const currencyFormat = (input: string | number) => {
+export const currencyFormat = (input: string | number): string => {
   let value = input;
+
+  // Ensure value is a string
   if (typeof value === "number") {
     value = value.toString();
   }
+
   if (value === "0") {
     return "0";
-  } else {
-    return value
-      .replace(/^0+/, "")
-      .replace(/(?!\.)\D/g, "")
-      .replace(/(?<=\..*)\./g, "")
-      .replace(/(?<=\.\d\d).*/g, "")
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  return value
+    .replace(/^0+/, "") // Remove leading zeros
+    .replace(/(?!\.)\D/g, "") // Remove non-digits except the first dot
+    .replace(/\..*?\./g, ".") // Remove extra dots after the first one
+    .replace(/(\.\d{2}).*/g, "$1") // Limit to two decimal places
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands
 };
 
 export const numberFormat = (input: string | number) => {
