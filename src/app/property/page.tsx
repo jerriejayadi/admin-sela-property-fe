@@ -168,6 +168,8 @@ export default function Property() {
         : rows.sellingType === "RENT"
         ? "Rent"
         : "Sold",
+      owner: rows.owner,
+      owner_phone: rows.ownerPhone
     }));
     setCSV(temp);
   };
