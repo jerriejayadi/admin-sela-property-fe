@@ -150,11 +150,10 @@ export default function Property() {
   const handleFetch = () => {
     fetchList(filter).then((res) => {
       setData(res.result);
-      fetchList({ ...filter, limit: 9999, page:1 }).then((res) => {
+      fetchList({ ...filter, limit: 9999, page: 1 }).then((res) => {
         manageCSVData(res.result.items);
       });
     });
-
   };
 
   const manageCSVData = (data: any) => {
@@ -170,10 +169,11 @@ export default function Property() {
         : "Sold",
       owner: rows.owner,
       ownerPhone: rows.ownerPhone,
-      googleUrl: rows.address.locationMaps,
+      mapsUrl: rows.address.locationMaps,
       subdistrict: rows.address.subdistrict,
       regency: rows.address.regency,
       province: rows.address.province,
+      driveUrl: rows.googleDriveUrl,
     }));
     setCSV(temp);
   };
