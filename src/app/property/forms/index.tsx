@@ -362,7 +362,7 @@ export default function Forms({
               value={formik.values.googleDriveUrl}
               id={"googleDriveUrl"}
               name={"googleDriveUrl"}
-              placeholder={"Enter Link to Google Drive"}
+              placeholder={"https://drive.google.com/..."}
               label={"Google Drive Link"}
               onChange={formik.handleChange}
             />
@@ -384,7 +384,7 @@ export default function Forms({
                 value={formik.values.title}
                 id={"title"}
                 name={"title"}
-                placeholder={"Enter your Property Title"}
+                placeholder={"Spacious Apartment with Modern Amenities"}
                 label={"Property Title"}
                 onChange={formik.handleChange}
               />
@@ -435,7 +435,7 @@ export default function Forms({
               }
               id={"price"}
               name={"price"}
-              placeholder={"Enter your Property Price"}
+              placeholder={"0"}
               label={"Price"}
               onChange={(e) => {
                 formik.setFieldValue("price", currencyFormat(e.target.value));
@@ -460,7 +460,7 @@ export default function Forms({
                 value={formik.values.buildingSize}
                 id={"buildingSize"}
                 name={"buildingSize"}
-                placeholder={"Enter buildsize"}
+                placeholder={"0"}
                 label={"Build size (in sqm)"}
                 onChange={(e) => {
                   formik.setFieldValue(
@@ -474,7 +474,7 @@ export default function Forms({
                 value={formik.values.landSize}
                 id={"landSize"}
                 name={"landSize"}
-                placeholder={"Enter Landsize"}
+                placeholder={"0"}
                 label={"Land size (in sqm)"}
                 onChange={(e) => {
                   formik.setFieldValue(
@@ -492,7 +492,7 @@ export default function Forms({
                 value={formik.values.bedRoomsAmount}
                 id={"bedRoomsAmount"}
                 name={"bedRoomsAmount"}
-                placeholder={"Enter Bedroom amount"}
+                placeholder={"0"}
                 label={"Bedroom"}
                 onChange={(e) => {
                   formik.setFieldValue(
@@ -509,7 +509,7 @@ export default function Forms({
                 value={formik.values.bathRoomsAmount}
                 id={"bathRoomsAmount"}
                 name={"bathRoomsAmount"}
-                placeholder={"Enter Bathroom amount"}
+                placeholder={"0"}
                 label={"Bathroom"}
                 onChange={(e) => {
                   formik.setFieldValue(
@@ -525,7 +525,7 @@ export default function Forms({
                 value={formik.values.carParkAmount}
                 id={"carParkAmount"}
                 name={"carParkAmount"}
-                placeholder={"Enter Car Park Amount"}
+                placeholder={"0"}
                 label={"Car Park"}
                 onChange={(e) => {
                   formik.setFieldValue(
@@ -547,7 +547,7 @@ export default function Forms({
                     value={formik.values.address.subdistrict}
                     id={"title"}
                     name={"address.subdistrict"}
-                    placeholder={`Enter Subdistrict`}
+                    placeholder={`Canggu`}
                     label={"Subdistrict"}
                     onChange={formik.handleChange}
                   />
@@ -559,7 +559,7 @@ export default function Forms({
                     value={formik.values.address.regency}
                     id={"regency"}
                     name={"address.regency"}
-                    placeholder={`Enter Regency`}
+                    placeholder={`Badung`}
                     label={"Regency"}
                     onChange={formik.handleChange}
                   />
@@ -571,7 +571,7 @@ export default function Forms({
                     value={formik.values.address.province}
                     id={"province"}
                     name={"address.province"}
-                    placeholder={`Enter Province`}
+                    placeholder={`Bali`}
                     label={"Province"}
                     onChange={formik.handleChange}
                   />
@@ -601,7 +601,7 @@ export default function Forms({
                     value={formik.values.owner}
                     id={"owner"}
                     name={"owner"}
-                    placeholder={`Enter Owner Name`}
+                    placeholder={`John Doe`}
                     label={"Name"}
                     onChange={formik.handleChange}
                   />
@@ -612,7 +612,7 @@ export default function Forms({
                     value={formik.values.ownerPhone}
                     id={"ownerPhone"}
                     name={"ownerPhone"}
-                    placeholder={`Enter Owner Phone Number`}
+                    placeholder={`6281234567890`}
                     label={"Phone Number"}
                     onChange={(e) => {
                       formik.setFieldValue(
