@@ -169,7 +169,11 @@ export default function Property() {
         ? "Rent"
         : "Sold",
       owner: rows.owner,
-      owner_phone: rows.ownerPhone
+      ownerPhone: rows.ownerPhone,
+      googleUrl: rows.address.locationMaps,
+      subdistrict: rows.address.subdistrict,
+      regency: rows.address.regency,
+      province: rows.address.province,
     }));
     setCSV(temp);
   };
