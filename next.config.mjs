@@ -5,6 +5,14 @@ dotenv.config();
 
 const nextConfig = {
   reactStrictMode: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+    ],
+  },
   env: {
     HOST: process.env.HOST,
   },

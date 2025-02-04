@@ -34,7 +34,6 @@ export default function UploadImage({
               window.open(url, "_blank");
             }}
             className={` relative object-cover w-20 h-20`}
-            loader={({ src }) => src}
             alt={``}
             src={url!}
             width={50}

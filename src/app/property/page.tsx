@@ -397,7 +397,6 @@ export default function Property() {
                       <Image
                         alt={""}
                         src={rows.images[0]?.url ?? "/"}
-                        loader={({ src }) => src}
                         width={300}
                         height={300}
                         className={`w-10 h-10 md:w-20 md:h-20  object-cover shrink-0`}

@@ -165,7 +165,6 @@ export default function Sidebar({ children }: SideBarProps) {
                   className={`w-11 h-11 object-cover rounded-[100%]`}
                   alt={``}
                   src={profile?.image}
-                  loader={({ src }) => src}
                   width={300}
                   height={300}
                 />

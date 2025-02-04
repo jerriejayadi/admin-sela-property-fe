@@ -574,9 +574,6 @@ export default function PropertyDetail({ params }: DetailPropertyParams) {
                       selectedImage === rows.url && "border-2 border-orange-300"
                     }`}
                     alt={``}
-                    loader={({ src }) => {
-                      return src;
-                    }}
                     src={rows.url}
                     width={900}
                     height={900}

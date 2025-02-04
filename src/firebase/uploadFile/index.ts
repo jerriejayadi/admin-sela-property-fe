@@ -1,4 +1,10 @@
-import { ref, uploadBytes, getDownloadURL, getStorage, deleteObject } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  getStorage,
+  deleteObject,
+} from "firebase/storage";
 import { nanoid } from "nanoid";
 import firebase_app from "../config";
 
@@ -13,7 +19,11 @@ export const uploadFile = async (file: any) => {
       storage,
       `${filename}.${file.name.split(".").pop()}`
     );
-    const res = await uploadBytes(storageRef, file);
+    const metadata = {
+      cacheControl: "public, max-age=31536000", // 1 year cache
+      contentType: file.type, // Keep the correct MIME type
+    };
+    const res = await uploadBytes(storageRef, file, metadata);
 
     return res.metadata.fullPath;
   } catch (error) {
